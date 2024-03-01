@@ -1,17 +1,17 @@
 {
-    "name": ":vendor_slug/:package_slug",
-    "description": ":package_description",
+    "name": "indexzer0/laravel-validation-provider",
+    "description": "This is my package laravel-validation-provider",
     "keywords": [
-        ":vendor_name",
+        "IndexZer0",
         "laravel",
-        ":package_slug"
+        "laravel-validation-provider"
     ],
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "homepage": "https://github.com/indexzer0/laravel-validation-provider",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": "IndexZer0",
+            "email": "24657691+IndexZer0@users.noreply.github.com",
             "role": "Developer"
         }
     ],
@@ -35,19 +35,19 @@
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src/",
-            "VendorName\\Skeleton\\Database\\Factories\\": "database/factories/"
+            "IndexZer0\\LaravelValidationProvider\\": "src/",
+            "IndexZer0\\LaravelValidationProvider\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests/",
+            "IndexZer0\\LaravelValidationProvider\\Tests\\": "tests/",
             "Workbench\\App\\": "workbench/app/"
         }
     },
     "scripts": {
         "post-autoload-dump": "@composer run prepare",
-        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "clear": "@php vendor/bin/testbench package:purge-laravel-validation-provider --ansi",
         "prepare": "@php vendor/bin/testbench package:discover --ansi",
         "build": [
             "@composer run prepare",
@@ -73,10 +73,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\Skeleton\\SkeletonServiceProvider"
+                "IndexZer0\\LaravelValidationProvider\\LaravelValidationProviderServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "VendorName\\Skeleton\\Facades\\Skeleton"
+                "LaravelValidationProvider": "IndexZer0\\LaravelValidationProvider\\Facades\\LaravelValidationProvider"
             }
         }
     },
