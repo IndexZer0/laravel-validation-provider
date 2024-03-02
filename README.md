@@ -291,7 +291,7 @@ $validationProvider->rules();
 interface ValidationProvider {}
 
 // Validation Providers
-class AbstractValidationProvider implements ValidationProvider {}
+abstract class AbstractValidationProvider implements ValidationProvider {}
 class NestedValidationProvider extends AbstractValidationProvider {}
 class AggregateValidationProvider extends AbstractValidationProvider {}
 
