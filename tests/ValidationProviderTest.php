@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\ValidationException;
 use IndexZer0\LaravelValidationProvider\Tests\ValidationProviders\AddressValidationProvider;
+use IndexZer0\LaravelValidationProvider\Tests\ValidationProviders\EmptyValidationProvider;
 
 it('can create validator', function () {
     $validationProvider = new AddressValidationProvider();
@@ -36,4 +37,12 @@ it('can validate', function () {
             ],
         ]);
     }
+});
+
+it('defaults to empty rules, messages and attributes', function () {
+    $validationProvider = new EmptyValidationProvider();
+
+    expect($validationProvider->rules())->toBe([]);
+    expect($validationProvider->messages())->toBe([]);
+    expect($validationProvider->attributes())->toBe([]);
 });

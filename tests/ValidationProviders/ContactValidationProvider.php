@@ -8,10 +8,6 @@ use IndexZer0\LaravelValidationProvider\ValidationProviders\AbstractValidationPr
 
 class ContactValidationProvider extends AbstractValidationProvider
 {
-    public function __construct()
-    {
-    }
-
     public function rules(): array
     {
         return [
