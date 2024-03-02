@@ -11,8 +11,6 @@ abstract class AbstractValidationProvider implements ValidationProvider
 {
     protected array $nestedKey = [];
 
-    protected int $level = 1;
-
     public function rules(): array
     {
         return [];
@@ -37,22 +35,14 @@ abstract class AbstractValidationProvider implements ValidationProvider
         return join('.', [$nestedKey, $field]);
     }
 
-    public function prependNestedKey(string $nestedKey, bool $increaseLevel): void
+    public function prependNestedKey(string $nestedKey): void
     {
-        if ($increaseLevel) {
-            $this->increaseLevel();
-        }
         array_unshift($this->nestedKey, $nestedKey);
     }
 
     protected function getNestedKeyDotNotation(): string
     {
         return join('.', $this->nestedKey);
-    }
-
-    public function increaseLevel(): void
-    {
-        $this->level++;
     }
 
     public function createValidator($data): Validator

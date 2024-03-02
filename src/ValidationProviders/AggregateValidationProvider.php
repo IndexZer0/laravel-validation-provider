@@ -48,11 +48,11 @@ class AggregateValidationProvider extends AbstractValidationProvider
         return $attributes;
     }
 
-    public function prependNestedKey(string $nestedKey, bool $increaseLevel): void
+    public function prependNestedKey(string $nestedKey): void
     {
-        parent::prependNestedKey($nestedKey, $increaseLevel);
+        parent::prependNestedKey($nestedKey);
         foreach ($this->validationProviders as $validationProvider) {
-            $validationProvider->prependNestedKey($nestedKey, true);
+            $validationProvider->prependNestedKey($nestedKey);
         }
     }
 }

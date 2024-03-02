@@ -16,7 +16,7 @@ interface ValidationProvider
 
     public function dependentField(string $field): string;
 
-    public function prependNestedKey(string $nestedKey, bool $increaseLevel): void;
+    public function prependNestedKey(string $nestedKey): void;
 
     public function createValidator(array $data): Validator;
 

@@ -12,7 +12,7 @@ class NestedValidationProvider extends AbstractValidationProvider
         string $nestedKey,
         public readonly ValidationProvider $validationProvider
     ) {
-        $this->prependNestedKey($nestedKey, false);
+        $this->prependNestedKey($nestedKey);
     }
 
     public function rules(): array
@@ -36,15 +36,15 @@ class NestedValidationProvider extends AbstractValidationProvider
         });
     }
 
-    public function prependNestedKey(string $nestedKey, bool $increaseLevel): void
+    public function prependNestedKey(string $nestedKey): void
     {
-        parent::prependNestedKey($nestedKey, $increaseLevel);
-        $this->validationProvider->prependNestedKey($nestedKey, true);
+        parent::prependNestedKey($nestedKey);
+        $this->validationProvider->prependNestedKey($nestedKey);
     }
 
     private function getNestedKeyForLevel(): string
     {
-        return $this->nestedKey[$this->level - 1];
+        return $this->nestedKey[count($this->nestedKey) - 1];
     }
 
     private function mapWithKeys(array $array, callable $callback): array
