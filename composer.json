@@ -17,7 +17,6 @@
     ],
     "require": {
         "php": "^8.1",
-        "spatie/laravel-package-tools": "^1.14.0",
         "illuminate/contracts": "^10.0"
     },
     "require-dev": {
@@ -35,8 +34,7 @@
     },
     "autoload": {
         "psr-4": {
-            "IndexZer0\\LaravelValidationProvider\\": "src/",
-            "IndexZer0\\LaravelValidationProvider\\Database\\Factories\\": "database/factories/"
+            "IndexZer0\\LaravelValidationProvider\\": "src/"
         }
     },
     "autoload-dev": {
@@ -68,16 +66,6 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "phpstan/extension-installer": true
-        }
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "IndexZer0\\LaravelValidationProvider\\LaravelValidationProviderServiceProvider"
-            ],
-            "aliases": {
-                "LaravelValidationProvider": "IndexZer0\\LaravelValidationProvider\\Facades\\LaravelValidationProvider"
-            }
         }
     },
     "minimum-stability": "dev",
