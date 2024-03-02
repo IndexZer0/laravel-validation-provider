@@ -8,5 +8,4 @@ use IndexZer0\LaravelValidationProvider\ValidationProviders\AbstractValidationPr
 
 class EmptyValidationProvider extends AbstractValidationProvider
 {
-
 }
