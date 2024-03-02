@@ -6,7 +6,7 @@ namespace IndexZer0\LaravelValidationProvider\Tests\FormRequests;
 
 use IndexZer0\LaravelValidationProvider\FormRequests\ValidationProviderFormRequest;
 
-class TestValidationProviderFormRequest extends ValidationProviderFormRequest
+class TestValidationProviderFormRequestPrepareHook extends ValidationProviderFormRequest
 {
     public function prepareForValidation()
     {
