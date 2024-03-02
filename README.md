@@ -1,4 +1,4 @@
-# This is my package laravel-validation-provider
+# laravel-validation-provider
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/indexzer0/laravel-validation-provider.svg?style=flat-square)](https://packagist.org/packages/indexzer0/laravel-validation-provider)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/indexzer0/laravel-validation-provider/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/indexzer0/laravel-validation-provider/actions?query=workflow%3Arun-tests+branch%3Amain)
@@ -6,15 +6,33 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/indexzer0/laravel-validation-provider/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/indexzer0/laravel-validation-provider/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/indexzer0/laravel-validation-provider.svg?style=flat-square)](https://packagist.org/packages/indexzer0/laravel-validation-provider)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+---
 
-## Support us
+- Store all your validation logic in clean reusable composable providers.
+- Avoid duplicating validation definitions.
+- Standardise the way you define and use validation in `Form Requests` and elsewhere.
+- Compose validation with the use of `AggregateValidationProvider` and `NestedValidationProvider`.
+- Easily create and validate data straight from the `ValidationProvider`.
 
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/laravel-validation-provider.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/laravel-validation-provider)
+---
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Defining Validation Providers](#defining-validation-providers)
+  - [Service Class Usage](#service-class-usage)
+  - [Form Requests Usage](#form-requests-usage)
+  - [Composing Validation Providers](#composing-validation-providers)
+  - [Dependent Rules](#dependent-rules)
+- [Package Offering](#package-offering)
 
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
+---
 
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+## Requirements
+
+- PHP Version >= 8.1
+- Laravel Version >= 10
+
+---
 
 ## Installation
 
@@ -24,38 +42,251 @@ You can install the package via composer:
 composer require indexzer0/laravel-validation-provider
 ```
 
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --tag="laravel-validation-provider-migrations"
-php artisan migrate
-```
-
-You can publish the config file with:
-
-```bash
-php artisan vendor:publish --tag="laravel-validation-provider-config"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-];
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="laravel-validation-provider-views"
-```
+---
 
 ## Usage
 
+### Defining Validation Providers
+
+- Create granular representations of domain concept validation classes.
+
 ```php
-$laravelValidationProvider = new IndexZer0\LaravelValidationProvider();
-echo $laravelValidationProvider->echoPhrase('Hello, IndexZer0!');
+class AddressValidationProvider extends AbstractValidationProvider
+{
+    public function rules(): array
+    {
+        return [
+            'post_code' => ['required', 'string', 'between:1,20'],
+            //...
+        ];
+    }
+
+    public function messages(): array
+    {
+        // messages
+    }
+
+    public function attributes(): array
+    {
+        // attributes
+    }
+}
 ```
+
+---
+
+### Service Class Usage
+
+```php
+$addressValidationProvider = new AddressValidationProvider();
+
+/** @var Illuminate\Validation\Validator $validator */
+$validator = $addressValidationProvider->createValidator($data);
+
+/** @var array $validated */
+$validated = $addressValidationProvider->validate($data);
+```
+
+---
+
+### Form Requests Usage
+
+You can use validation providers in your form requests via two methods.
+
+- [Extending Abstract](#extending-abstract)
+- [Decorate With Trait](#decorate-with-trait)
+
+---
+
+#### Extending Abstract
+
+- `ValidationProviderFormRequest` is provided to extend your form requests from.
+
+Using `prepareForValidation` hook to instantiate validation provider.
+```php
+class StoreAddressRequest extends ValidationProviderFormRequest
+{
+    public function prepareForValidation()
+    {
+        $this->validationProvider = new AddressValidationProvider();
+    }
+}
+```
+
+Or using dependency injection.
+```php
+// In a service provider.
+$this->app->when(StoreAddressRequest::class)
+    ->needs(ValidationProvider::class)
+    ->give([AddressValidationProvider::class]);
+  
+class StoreAddressRequest extends ValidationProviderFormRequest
+{
+    public function __construct(ValidationProvider $validationProvider)
+    {
+        $this->validationProvider = $validationProvider;
+    }
+}
+```
+
+---
+
+#### Decorate With Trait
+
+- `HasValidationProvider` is provided to decorate your existing form requests.
+
+If you don't have the ability to extend `ValidationProviderFormRequest`. You can instead use the `HasValidationProvider` trait in your existing form request.
+
+```php
+class StoreAddressRequest extends FormRequest
+{
+    use HasValidationProvider;
+    
+    public function prepareForValidation()
+    {
+        $this->validationProvider = new AddressValidationProvider();
+    }
+}
+```
+
+---
+
+### Composing Validation Providers
+
+You may have routes that allow for storing of multiple domain concepts and want to validate data in nested arrays without duplication.
+
+Lets look at the example of 3 routes.
+
+- Route: address - stores address information.
+- Route: contact-details - stores contact information.
+- Route: profile - stores address and contact information.
+
+```php
+/*
+ * ------------------
+ * Address
+ * ------------------
+ */
+Route::post('address', StoreAddress::class);
+class StoreAddress extends Controller
+{
+    public function __invoke(StoreAddressRequest $request) {}
+}
+class StoreAddressRequest extends ValidationProviderFormRequest
+{
+    public function prepareForValidation()
+    {
+        $this->validationProvider = new AddressValidationProvider();
+    }
+}
+```
+
+```php
+/*
+ * ------------------
+ * Contact
+ * ------------------
+ */
+Route::post('contact-details', StoreContactDetails::class);
+class StoreContactDetails extends Controller
+{
+    public function __invoke(StoreContactDetailsRequest $request) {}
+}
+class StoreContactDetailsRequest extends ValidationProviderFormRequest
+{
+    public function prepareForValidation()
+    {
+        $this->validationProvider = new ContactValidationProvider();
+    }
+}
+```
+
+```php
+/*
+ * ------------------
+ * Profile
+ * ------------------
+ */
+Route::post('profile', StoreProfile::class);
+class StoreProfile extends Controller
+{
+    public function __invoke(StoreProfileRequest $request) {}
+}
+class StoreProfileRequest extends ValidationProviderFormRequest
+{
+    public function prepareForValidation()
+    {
+        $this->validationProvider = new NestedValidationProvider(
+            'profile',
+            new AggregateValidationProvider(
+                new NestedValidationProvider(
+                    'address',
+                    new AddressValidationProvider()                    
+                ),
+                new NestedValidationProvider(
+                    'contact',
+                    new ContactValidationProvider()                    
+                ),
+            )
+        )
+    }
+}
+```
+
+---
+
+### Dependent Rules
+
+- When using any of the [dependent](https://github.com/laravel/framework/blob/5e95946a8283a8d5c015035793f9c61c297e937f/src/Illuminate/Validation/Validator.php#L236) rules, you should use the `$this->dependentField()` helper.
+  - This ensures that when using the `NestedValidationProvider`, the dependent field will have the correct nesting.
+
+```php
+class PriceRangeValidationProvider extends AbstractValidationProvider
+{
+    public function rules(): array
+    {
+        return [
+            'min_price' => ["lt:{$this->dependentField('max_price')}"],
+            'max_price' => ["gt:{$this->dependentField('min_price')}"],
+        ];
+    }
+}
+
+$validationProvider = new NestedValidationProvider(
+    'product',
+    new PriceRangeValidationProvider()
+);
+
+$validationProvider->rules();
+
+//  [
+//      "product.min_price" => [
+//          "lt:product.max_price"
+//      ]
+//      "product.max_price" => [
+//          "gt:product.min_price"
+//      ]
+//  ]
+```
+
+---
+
+## Package Offering
+```php
+// Interface
+interface ValidationProvider
+
+// Validation Providers
+class AbstractValidationProvider implements ValidationProvider
+class NestedValidationProvider extends AbstractValidationProvider
+class AggregateValidationProvider extends AbstractValidationProvider
+
+// Form Request
+class ValidationProviderFormRequest extends \Illuminate\Foundation\Http\FormRequest
+trait HasValidationProvider
+```
+
+---
 
 ## Testing
 
@@ -63,22 +294,32 @@ echo $laravelValidationProvider->echoPhrase('Hello, IndexZer0!');
 composer test
 ```
 
+---
+
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+
+---
 
 ## Contributing
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
+---
+
 ## Security Vulnerabilities
 
 Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
+
+---
 
 ## Credits
 
 - [IndexZer0](https://github.com/IndexZer0)
 - [All Contributors](../../contributors)
+
+---
 
 ## License
 
