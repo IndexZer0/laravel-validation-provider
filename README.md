@@ -152,13 +152,28 @@ class StoreAddressRequest extends YourOwnExistingFormRequest
 
 ### Composing Validation Providers
 
-You may have routes that allow for storing of multiple domain concepts and want to validate data in nested arrays without duplication.
+#### Use case:
 
-Lets look at the example of 3 routes.
+- You may have parts of your application that need to validate data for various domain concepts.
+- You may want to validate data in nested arrays without introducing duplication in your rule definitions.
 
-- Route: address - stores address information.
-- Route: contact-details - stores contact information.
-- Route: profile - stores address and contact information.
+#### Example:
+
+Let's look at the example of 3 routes and how you could reuse your Validation Providers.
+
+- Route: address
+  - Stores address information
+  - Uses `AddressValidationProvider`
+- Route: contact-details
+  - Stores contact information
+  - Uses `ContactValidationProvider`
+- Route: profile
+  - Stores address **and** contact information.
+  - Uses 
+    - `NestedValidationProvider`
+    - `AggregateValidationProvider`
+    - `AddressValidationProvider`
+    - `ContactValidationProvider`
 
 ```php
 /*
