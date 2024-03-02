@@ -137,7 +137,7 @@ class StoreAddressRequest extends ValidationProviderFormRequest
 If you don't have the ability to extend `ValidationProviderFormRequest`. You can instead use the `HasValidationProvider` trait in your existing form request.
 
 ```php
-class StoreAddressRequest extends FormRequest
+class StoreAddressRequest extends YourOwnExistingFormRequest
 {
     use HasValidationProvider;
     
