@@ -48,7 +48,7 @@ composer require indexzer0/laravel-validation-provider
 
 ### Defining Validation Providers
 
-- Create granular representations of domain concept validation classes.
+- Create granular representations of domain concepts in validation provider classes.
 
 ```php
 class AddressValidationProvider extends AbstractValidationProvider
