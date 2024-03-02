@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace IndexZer0\LaravelValidationProvider\ValidationProviders;
 
-use Illuminate\Support\Arr;
 use IndexZer0\LaravelValidationProvider\Contracts\ValidationProvider;
 
 class NestedValidationProvider extends AbstractValidationProvider
@@ -18,21 +17,21 @@ class NestedValidationProvider extends AbstractValidationProvider
 
     public function rules(): array
     {
-        return Arr::mapWithKeys($this->validationProvider->rules(), function ($value, $key) {
+        return $this->mapWithKeys($this->validationProvider->rules(), function ($value, $key) {
             return [join('.', [$this->getNestedKeyForLevel(), $key]) => $value];
         });
     }
 
     public function messages(): array
     {
-        return Arr::mapWithKeys($this->validationProvider->messages(), function ($value, $key) {
+        return $this->mapWithKeys($this->validationProvider->messages(), function ($value, $key) {
             return [join('.', [$this->getNestedKeyForLevel(), $key]) => $value];
         });
     }
 
     public function attributes(): array
     {
-        return Arr::mapWithKeys($this->validationProvider->attributes(), function ($value, $key) {
+        return $this->mapWithKeys($this->validationProvider->attributes(), function ($value, $key) {
             return [join('.', [$this->getNestedKeyForLevel(), $key]) => $value];
         });
     }
@@ -46,5 +45,20 @@ class NestedValidationProvider extends AbstractValidationProvider
     private function getNestedKeyForLevel(): string
     {
         return $this->nestedKey[$this->level - 1];
+    }
+
+    private function mapWithKeys(array $array, callable $callback): array
+    {
+        $result = [];
+
+        foreach ($array as $key => $value) {
+            $assoc = $callback($value, $key);
+
+            foreach ($assoc as $mapKey => $mapValue) {
+                $result[$mapKey] = $mapValue;
+            }
+        }
+
+        return $result;
     }
 }
