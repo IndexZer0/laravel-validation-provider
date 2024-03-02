@@ -13,6 +13,21 @@ abstract class AbstractValidationProvider implements ValidationProvider
 
     protected int $level = 1;
 
+    public function rules(): array
+    {
+        return [];
+    }
+
+    public function messages(): array
+    {
+        return [];
+    }
+
+    public function attributes(): array
+    {
+        return [];
+    }
+
     public function dependentField(string $field): string
     {
         $nestedKey = $this->getNestedKeyDotNotation();
