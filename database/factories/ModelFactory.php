@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace IndexZer0\LaravelValidationProvider\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
