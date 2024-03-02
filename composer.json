@@ -1,10 +1,19 @@
 {
     "name": "indexzer0/laravel-validation-provider",
-    "description": "This is my package laravel-validation-provider",
+    "description": "Simple reusable composable validation providers",
     "keywords": [
         "IndexZer0",
         "laravel",
-        "laravel-validation-provider"
+        "laravel-validation-provider",
+        "Validation",
+        "Validation Provider",
+        "Form Requests",
+        "Combosable",
+        "Composition",
+        "Nested",
+        "Nesting",
+        "Aggregate",
+        "Aggregator"
     ],
     "homepage": "https://github.com/indexzer0/laravel-validation-provider",
     "license": "MIT",
