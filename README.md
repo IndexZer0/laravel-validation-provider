@@ -274,16 +274,16 @@ $validationProvider->rules();
 ## Package Offering
 ```php
 // Interface
-interface ValidationProvider
+interface ValidationProvider {}
 
 // Validation Providers
-class AbstractValidationProvider implements ValidationProvider
-class NestedValidationProvider extends AbstractValidationProvider
-class AggregateValidationProvider extends AbstractValidationProvider
+class AbstractValidationProvider implements ValidationProvider {}
+class NestedValidationProvider extends AbstractValidationProvider {}
+class AggregateValidationProvider extends AbstractValidationProvider {}
 
 // Form Request
-class ValidationProviderFormRequest extends \Illuminate\Foundation\Http\FormRequest
-trait HasValidationProvider
+class ValidationProviderFormRequest extends \Illuminate\Foundation\Http\FormRequest {}
+trait HasValidationProvider {}
 ```
 
 ---
