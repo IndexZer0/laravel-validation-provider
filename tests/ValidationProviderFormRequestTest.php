@@ -8,6 +8,7 @@ use IndexZer0\LaravelValidationProvider\Tests\ValidationProviders\AddressValidat
 use Illuminate\Support\Facades\Route;
 use IndexZer0\LaravelValidationProvider\Tests\ValidationProviders\ContactValidationProvider;
 use IndexZer0\LaravelValidationProvider\ValidationProviders\NestedValidationProvider;
+
 use function Pest\Laravel\json;
 use function Pest\Laravel\swap;
 
@@ -18,7 +19,7 @@ it('validates in a form request', function (
     ?array $expected_validation_messages,
 ) {
 
-    Route::post('test', function(TestValidationProviderFormRequest $request) {
+    Route::post('test', function (TestValidationProviderFormRequest $request) {
         return response()->json($request->validated());
     });
 
