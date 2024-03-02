@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace IndexZer0\LaravelValidationProvider\Contracts;
 
+use Illuminate\Validation\Validator;
+
 interface ValidationProvider
 {
     public function rules(): array;
@@ -15,4 +17,8 @@ interface ValidationProvider
     public function dependentField(string $field): string;
 
     public function prependNestedKey(string $nestedKey, bool $increaseLevel): void;
+
+    public function createValidator(array $data): Validator;
+
+    public function validate(array $data): array;
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace IndexZer0\LaravelValidationProvider\ValidationProviders;
 
+use Illuminate\Validation\Validator;
 use IndexZer0\LaravelValidationProvider\Contracts\ValidationProvider;
 
 abstract class AbstractValidationProvider implements ValidationProvider
@@ -37,5 +38,20 @@ abstract class AbstractValidationProvider implements ValidationProvider
     public function increaseLevel(): void
     {
         $this->level++;
+    }
+
+    public function createValidator($data): Validator
+    {
+        return \Illuminate\Support\Facades\Validator::make(
+            $data,
+            $this->rules(),
+            $this->messages(),
+            $this->attributes()
+        );
+    }
+
+    public function validate($data): array
+    {
+        return ($this->createValidator($data))->validate();
     }
 }
