@@ -154,7 +154,7 @@ class StoreAddressRequest extends YourOwnExistingFormRequest
 
 #### Use case:
 
-- You may have parts of your application that need to validate data for various domain concepts.
+- You may have parts of your application that need to validate data for multiple domain concepts.
 - You may want to validate data in nested arrays without introducing duplication in your rule definitions.
 
 #### Example:
