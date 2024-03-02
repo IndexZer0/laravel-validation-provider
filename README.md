@@ -22,6 +22,7 @@
   - [Composing Validation Providers](#composing-validation-providers)
   - [Dependent Rules](#dependent-rules)
 - [Package Offering](#package-offering)
+- [Future Feature Ideas](#future-feature-ideas)
 
 ---
 
@@ -297,6 +298,15 @@ class AggregateValidationProvider extends AbstractValidationProvider {}
 // Form Request
 class ValidationProviderFormRequest extends \Illuminate\Foundation\Http\FormRequest {}
 trait HasValidationProvider {}
+```
+
+---
+
+## Future Feature Ideas
+```php
+// Validation Providers
+class ExcludeRulesValidationProvider extends AbstractValidationProvider {}
+class MapRulesValidationProvider extends AbstractValidationProvider {}
 ```
 
 ---
