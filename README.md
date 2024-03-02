@@ -7,11 +7,10 @@
 
 ---
 
-- Store all your validation logic in clean reusable composable providers.
-- Avoid duplicating validation definitions.
+- Write all your validation definitions in clean reusable composable providers.
 - Standardise the way you define and use validation in `Form Requests` and elsewhere.
-- Compose validation with the use of `AggregateValidationProvider` and `NestedValidationProvider`.
-- Easily create and validate data straight from the `ValidationProvider`.
+- Easily compose validation with the use of `AggregateValidationProvider` and `NestedValidationProvider`.
+- Conveniently create and validate data straight from the `ValidationProvider`.
 
 ---
 - [Requirements](#requirements)
@@ -62,12 +61,12 @@ class AddressValidationProvider extends AbstractValidationProvider
 
     public function messages(): array
     {
-        // messages
+        return [];
     }
 
     public function attributes(): array
     {
-        // attributes
+        return [];
     }
 }
 ```
