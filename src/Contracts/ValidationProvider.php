@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace IndexZer0\LaravelValidationProvider\Contracts;
 
-use Illuminate\Validation\Validator;
+use Illuminate\Contracts\Validation\Validator;
 
 interface ValidationProvider
 {

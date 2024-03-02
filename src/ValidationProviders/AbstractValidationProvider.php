@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace IndexZer0\LaravelValidationProvider\ValidationProviders;
 
-use Illuminate\Validation\Validator;
+use Illuminate\Contracts\Validation\Validator;
 use IndexZer0\LaravelValidationProvider\Contracts\ValidationProvider;
 
 abstract class AbstractValidationProvider implements ValidationProvider
