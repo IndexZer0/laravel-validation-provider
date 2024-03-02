@@ -6,7 +6,6 @@ namespace IndexZer0\LaravelValidationProvider\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use IndexZer0\LaravelValidationProvider\LaravelValidationProviderServiceProvider;
 
 class TestCase extends Orchestra
 {
@@ -21,9 +20,7 @@ class TestCase extends Orchestra
 
     protected function getPackageProviders($app)
     {
-        return [
-            LaravelValidationProviderServiceProvider::class,
-        ];
+        return [];
     }
 
     public function getEnvironmentSetUp($app)
