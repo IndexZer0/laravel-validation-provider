@@ -117,7 +117,7 @@ Or using dependency injection.
 // In a service provider.
 $this->app->when(StoreAddressRequest::class)
     ->needs(ValidationProvider::class)
-    ->give([AddressValidationProvider::class]);
+    ->give(AddressValidationProvider::class);
   
 class StoreAddressRequest extends ValidationProviderFormRequest
 {
