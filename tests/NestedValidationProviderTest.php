@@ -160,4 +160,4 @@ it('nests validation rules | array dot astrix notation', function () {
             'min:1',
         ],
     ]);
-})->only();
+});
