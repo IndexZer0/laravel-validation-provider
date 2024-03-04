@@ -138,23 +138,23 @@ it('nests validation rules with aggregate', function () {
 
 it('nests validation rules | array dot astrix notation', function () {
     $nestedValidationProvider = new NestedValidationProvider(
-        'address.*',
+        'addresses.*',
         new AddressValidationProvider(),
     );
 
     expect($nestedValidationProvider->rules())->toBe([
-        'address.*.post_code'           => [
+        'addresses.*.post_code'           => [
             'required',
             'string',
             'min:1',
-            'required_if:address.*.street,something'
+            'required_if:addresses.*.street,something'
         ],
-        'address.*.street'              => [
+        'addresses.*.street'              => [
             'required',
             'string',
             'min:1',
         ],
-        'address.*.home_phone_number'   => [
+        'addresses.*.home_phone_number'   => [
             'required',
             'string',
             'min:1',
