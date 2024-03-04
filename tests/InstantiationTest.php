@@ -6,6 +6,7 @@ use IndexZer0\LaravelValidationProvider\Facades\ValidationProvider;
 use IndexZer0\LaravelValidationProvider\Tests\ValidationProviders\AuthorValidationProvider;
 use IndexZer0\LaravelValidationProvider\Tests\ValidationProviders\BookValidationProvider;
 use IndexZer0\LaravelValidationProvider\ValidationProviders\AggregateValidationProvider;
+use IndexZer0\LaravelValidationProvider\ValidationProviders\ArrayValidationProvider;
 use IndexZer0\LaravelValidationProvider\ValidationProviders\CustomValidationProvider;
 use IndexZer0\LaravelValidationProvider\ValidationProviders\NestedValidationProvider;
 
@@ -28,13 +29,7 @@ it('instantiates object hierarchies consistently', function () {
         new AggregateValidationProvider(
             new AuthorValidationProvider(),
             new CustomValidationProvider($customRules, $customMessages, $customAttributes),
-            new NestedValidationProvider(
-                'books',
-                new NestedValidationProvider(
-                    '*',
-                    new BookValidationProvider()
-                )
-            )
+            new ArrayValidationProvider('books', new BookValidationProvider())
         )
     );
 
@@ -42,11 +37,7 @@ it('instantiates object hierarchies consistently', function () {
         'author' => [
             AuthorValidationProvider::class,
             new CustomValidationProvider($customRules, $customMessages, $customAttributes),
-            'books' => [
-                '*' => [
-                    BookValidationProvider::class,
-                ],
-            ]
+            new ArrayValidationProvider('books', new BookValidationProvider()),
         ],
     ]);
 
