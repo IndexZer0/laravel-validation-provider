@@ -87,7 +87,7 @@ abstract class AbstractValidationProvider implements ValidationProvider
             if (!class_exists($validationProvider) || !is_a($validationProvider, ValidationProvider::class, true)) {
                 throw new \Exception('Class must be a ValidationProvider');
             }
-            $validationProvider = new $validationProvider;
+            $validationProvider = new $validationProvider();
         }
 
         return new AggregateValidationProvider(
