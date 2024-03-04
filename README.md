@@ -22,7 +22,7 @@
   - [Composing Validation Providers](#composing-validation-providers)
   - [Dependent Rules](#dependent-rules)
 - [Package Offering](#package-offering)
-- [Future Feature Ideas](#future-feature-ideas)
+- [v2.0.0 - Future Feature Ideas](#v200---future-feature-ideas)
 
 ---
 
@@ -302,12 +302,35 @@ trait HasValidationProvider {}
 
 ---
 
-## Future Feature Ideas
+## v2.0.0 - Future Feature Ideas
+
+- Working on adding features to this package including:
+
 ```php
 // Validation Providers
-class ExcludeRulesValidationProvider extends AbstractValidationProvider {}
-class MapRulesValidationProvider extends AbstractValidationProvider {}
+class ExcludeAttributesValidationProvider extends AbstractValidationProvider {}
+class ArrayValidationProvider extends NestedValidationProvider {}
+class CustomValidationProvider extends AbstractValidationProvider {}
+
+// Facade
+ValidationProvider::make([
+    'author' => [
+        AuthorValidationProvider::class,
+        new CustomValidationProvider($customRules, $customMessages, $customAttributes),
+        new ArrayValidationProvider('books', new BookValidationProvider()),
+    ],
+]);
+
+// fluent api for building validation providers
+fluentInstantiationClassString = (new BookValidationProvider())
+        ->nestedArray('books')
+        ->with(new CustomValidationProvider($customRules, $customMessages, $customAttributes))
+        ->with(AuthorValidationProvider::class)
+        ->nested('author');
 ```
+
+- **Disclaimer: All subject to change**
+- PR of current development: https://github.com/IndexZer0/laravel-validation-provider/pull/3
 
 ---
 
