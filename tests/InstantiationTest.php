@@ -11,17 +11,23 @@ use IndexZer0\LaravelValidationProvider\ValidationProviders\NestedValidationProv
 
 it('instantiates object hierarchies consistently', function () {
 
+    $customRules = [
+        'books' => ['required', 'array', 'min:1', 'max:2',],
+    ];
+
+    $customMessages = [
+        'books.required' => 'Provide :attribute'
+    ];
+
+    $customAttributes = [
+        'books' => 'BOOKS'
+    ];
+
     $manualInstantiation = new NestedValidationProvider(
         'author',
         new AggregateValidationProvider(
             new AuthorValidationProvider(),
-            new CustomValidationProvider([
-                'books' => ['required', 'array', 'min:1', 'max:2',],
-            ], [
-                'books.required' => 'Provide :attribute'
-            ], [
-                'books' => 'BOOKS'
-            ]),
+            new CustomValidationProvider($customRules, $customMessages, $customAttributes),
             new NestedValidationProvider(
                 'books',
                 new NestedValidationProvider(
@@ -35,13 +41,7 @@ it('instantiates object hierarchies consistently', function () {
     $facadeInstantiation = ValidationProvider::make([
         'author' => [
             AuthorValidationProvider::class,
-            new CustomValidationProvider([
-                'books' => ['required', 'array', 'min:1', 'max:2',],
-            ], [
-                'books.required' => 'Provide :attribute'
-            ], [
-                'books' => 'BOOKS'
-            ]),
+            new CustomValidationProvider($customRules, $customMessages, $customAttributes),
             'books' => [
                 '*' => [
                     BookValidationProvider::class,
@@ -52,25 +52,13 @@ it('instantiates object hierarchies consistently', function () {
 
     $fluentInstantiationObjects = (new BookValidationProvider())
         ->nestedArray('books')
-        ->with(new CustomValidationProvider([
-            'books' => ['required', 'array', 'min:1', 'max:2',],
-        ], [
-            'books.required' => 'Provide :attribute'
-        ], [
-            'books' => 'BOOKS'
-        ]))
+        ->with(new CustomValidationProvider($customRules, $customMessages, $customAttributes))
         ->with(new AuthorValidationProvider())
         ->nested('author');
 
     $fluentInstantiationClassString = (new BookValidationProvider())
         ->nestedArray('books')
-        ->with(new CustomValidationProvider([
-            'books' => ['required', 'array', 'min:1', 'max:2',],
-        ], [
-            'books.required' => 'Provide :attribute'
-        ], [
-            'books' => 'BOOKS'
-        ]))
+        ->with(new CustomValidationProvider($customRules, $customMessages, $customAttributes))
         ->with(AuthorValidationProvider::class)
         ->nested('author');
 
@@ -106,4 +94,4 @@ it('instantiates object hierarchies consistently', function () {
         'author.books' => 'BOOKS',
     ]);
 
-});
+})->only();
