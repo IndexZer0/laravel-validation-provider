@@ -26,13 +26,15 @@ abstract class AbstractValidationProvider implements ValidationProvider
         return [];
     }
 
-    public function dependentField(string $field): string
+    public function dependentField(string $otherField): string
     {
         $nestedKey = $this->getNestedKeyDotNotation();
+
         if ($nestedKey === '') {
-            return $field;
+            return $otherField;
         }
-        return join('.', [$nestedKey, $field]);
+
+        return join('.', [$nestedKey, $otherField]);
     }
 
     public function prependNestedKey(string $nestedKey): void
