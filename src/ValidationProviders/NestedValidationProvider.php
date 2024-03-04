@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace IndexZer0\LaravelValidationProvider\ValidationProviders;
 
 use IndexZer0\LaravelValidationProvider\Contracts\ValidationProvider;
+use IndexZer0\LaravelValidationProvider\Traits\HasValidationProviderChild;
 
 class NestedValidationProvider extends AbstractValidationProvider
 {
+    use HasValidationProviderChild;
+
     public function __construct(
         string $nestedKey,
         public readonly ValidationProvider $validationProvider
@@ -28,12 +31,6 @@ class NestedValidationProvider extends AbstractValidationProvider
     public function attributes(): array
     {
         return $this->mapWithKeys($this->validationProvider->attributes());
-    }
-
-    public function prependNestedKey(string $nestedKey): void
-    {
-        parent::prependNestedKey($nestedKey);
-        $this->validationProvider->prependNestedKey($nestedKey);
     }
 
     protected function getNestedKeyPrefix(): string

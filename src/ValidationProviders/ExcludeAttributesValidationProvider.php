@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace IndexZer0\LaravelValidationProvider\ValidationProviders;
 
 use IndexZer0\LaravelValidationProvider\Contracts\ValidationProvider;
+use IndexZer0\LaravelValidationProvider\Traits\HasValidationProviderChild;
 
 class ExcludeAttributesValidationProvider extends AbstractValidationProvider
 {
+    use HasValidationProviderChild;
+
     public function __construct(
         public readonly array $excludeAttributes,
         public readonly ValidationProvider $validationProvider
@@ -28,12 +31,6 @@ class ExcludeAttributesValidationProvider extends AbstractValidationProvider
     public function attributes(): array
     {
         return $this->removeAttributes($this->validationProvider->attributes());
-    }
-
-    public function prependNestedKey(string $nestedKey): void
-    {
-        parent::prependNestedKey($nestedKey);
-        $this->validationProvider->prependNestedKey($nestedKey);
     }
 
     private function removeAttributes(array $data): array

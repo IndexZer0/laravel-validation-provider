@@ -42,7 +42,7 @@ it('can aggregate', function () {
         ->with(BookValidationProvider::class);
 
     expect($validationProvider)->toBeInstanceOf(AggregateValidationProvider::class);
-    $validationProviders = $validationProvider->getValidationProviders();
+    $validationProviders = $validationProvider->validationProviders;
     expect($validationProviders[0])->toBeInstanceOf(BookValidationProvider::class);
     expect($validationProviders[1])->toBeInstanceOf(AuthorValidationProvider::class);
 
