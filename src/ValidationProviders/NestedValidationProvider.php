@@ -17,23 +17,17 @@ class NestedValidationProvider extends AbstractValidationProvider
 
     public function rules(): array
     {
-        return $this->mapWithKeys($this->validationProvider->rules(), function ($value, $key) {
-            return [join('.', [$this->getNestedKeyForLevel(), $key]) => $value];
-        });
+        return $this->mapWithKeys($this->validationProvider->rules());
     }
 
     public function messages(): array
     {
-        return $this->mapWithKeys($this->validationProvider->messages(), function ($value, $key) {
-            return [join('.', [$this->getNestedKeyForLevel(), $key]) => $value];
-        });
+        return $this->mapWithKeys($this->validationProvider->messages());
     }
 
     public function attributes(): array
     {
-        return $this->mapWithKeys($this->validationProvider->attributes(), function ($value, $key) {
-            return [join('.', [$this->getNestedKeyForLevel(), $key]) => $value];
-        });
+        return $this->mapWithKeys($this->validationProvider->attributes());
     }
 
     public function prependNestedKey(string $nestedKey): void
@@ -42,17 +36,20 @@ class NestedValidationProvider extends AbstractValidationProvider
         $this->validationProvider->prependNestedKey($nestedKey);
     }
 
-    private function getNestedKeyForLevel(): string
+    protected function getNestedKeyPrefix(): string
     {
         return $this->nestedKey[count($this->nestedKey) - 1];
     }
 
-    private function mapWithKeys(array $array, callable $callback): array
+    private function mapWithKeys(array $array): array
     {
         $result = [];
 
         foreach ($array as $key => $value) {
-            $assoc = $callback($value, $key);
+
+            $assoc = (function ($value, $key) {
+                return [join('.', [$this->getNestedKeyPrefix(), $key]) => $value];
+            })($value, $key);
 
             foreach ($assoc as $mapKey => $mapValue) {
                 $result[$mapKey] = $mapValue;
