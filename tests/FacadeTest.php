@@ -128,22 +128,10 @@ it('fails make from config', function (mixed $make_config, string $expected_exce
         'expected_exception_message' => 'Class must be a ValidationProvider'
     ],
 
-    'single validation provider | object' => [
-        'make_config' => new stdClass(),
-        'expected_exception_message' => 'Object must be a ValidationProvider'
-    ],
-
     'single validation provider | nested with class string' => [
         'make_config' => [
             'key' => stdClass::class
         ],
         'expected_exception_message' => 'Class must be a ValidationProvider',
-    ],
-
-    'single validation provider | nested with object' => [
-        'make_config' => [
-            'key' => new stdClass()
-        ],
-        'expected_exception_message' => 'Object must be a ValidationProvider'
     ],
 ]);

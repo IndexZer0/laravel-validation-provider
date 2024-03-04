@@ -10,40 +10,34 @@ use IndexZer0\LaravelValidationProvider\ValidationProviders\NestedValidationProv
 
 class ValidationProviderFactory
 {
-    public static function make($config): ValidationProvider
+    public static function make(ValidationProvider|string|array $config): ValidationProvider
     {
-        if (is_object($config)) {
-            if (!is_a($config, ValidationProvider::class, true)) {
-                throw new \Exception('Object must be a ValidationProvider');
-            }
+        if (is_a($config, ValidationProvider::class)) {
             return $config;
         }
 
         if (is_string($config)) {
-            if (!class_exists($config) || !is_a($config, ValidationProvider::class, true)) {
-                throw new \Exception('Class must be a ValidationProvider');
-            }
-            return new $config();
+            return ValidationProviderFactory::instantiateValidationProvider($config);
         }
 
-        return self::handleMakeArray($config);
+        return self::makeFromArray($config);
     }
 
-    private static function handleMakeArray($config): ValidationProvider
+    private static function makeFromArray(array $config): ValidationProvider
     {
-        if (count($config) < 2) {
-            return self::handleMakeKeyValue(array_keys($config)[0], $config[array_key_first($config)]);
-        }
-
         $validationProviders = [];
         foreach ($config as $key => $value) {
-            $validationProviders[] = self::handleMakeKeyValue($key, $value);
+            $validationProviders[] = self::makeArrayElement($key, $value);
+        }
+
+        if (count($validationProviders) < 2) {
+            return $validationProviders[0];
         }
 
         return new AggregateValidationProvider(...$validationProviders);
     }
 
-    private static function handleMakeKeyValue($key, $value): ValidationProvider
+    private static function makeArrayElement($key, $value): ValidationProvider
     {
         if (is_string($key)) {
             return new NestedValidationProvider(
@@ -53,5 +47,18 @@ class ValidationProviderFactory
         }
 
         return self::make($value);
+    }
+
+    public static function instantiateValidationProvider(string $fqcn): ValidationProvider
+    {
+        self::ensureFqcnIsValidationProvider($fqcn);
+        return new $fqcn();
+    }
+
+    private static function ensureFqcnIsValidationProvider(string $fqcn): void
+    {
+        if (!class_exists($fqcn) || !is_a($fqcn, ValidationProvider::class, true)) {
+            throw new \Exception('Class must be a ValidationProvider');
+        }
     }
 }

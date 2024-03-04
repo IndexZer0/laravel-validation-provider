@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace IndexZer0\LaravelValidationProvider\Facades;
 
 use Illuminate\Support\Facades\Facade;
+use IndexZer0\LaravelValidationProvider\Contracts\ValidationProvider as ValidationProviderContract;
 use IndexZer0\LaravelValidationProvider\ValidationProviderFactory;
 
 /**
- * @method static \IndexZer0\LaravelValidationProvider\Contracts\ValidationProvider make(mixed $config)
+ * @method static ValidationProviderContract make(ValidationProviderContract|string|array $config)
  *
  * @see ValidationProviderFactory
  */

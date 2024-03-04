@@ -6,6 +6,7 @@ namespace IndexZer0\LaravelValidationProvider\ValidationProviders;
 
 use Illuminate\Contracts\Validation\Validator;
 use IndexZer0\LaravelValidationProvider\Contracts\ValidationProvider;
+use IndexZer0\LaravelValidationProvider\ValidationProviderFactory;
 
 abstract class AbstractValidationProvider implements ValidationProvider
 {
@@ -81,10 +82,7 @@ abstract class AbstractValidationProvider implements ValidationProvider
     public function with(string|ValidationProvider $validationProvider): ValidationProvider
     {
         if (is_string($validationProvider)) {
-            if (!class_exists($validationProvider) || !is_a($validationProvider, ValidationProvider::class, true)) {
-                throw new \Exception('Class must be a ValidationProvider');
-            }
-            $validationProvider = new $validationProvider();
+            $validationProvider = ValidationProviderFactory::instantiateValidationProvider($validationProvider);
         }
 
         return new AggregateValidationProvider(
