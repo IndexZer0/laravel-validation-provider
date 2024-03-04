@@ -11,12 +11,16 @@ use IndexZer0\LaravelValidationProvider\ValidationProviders\NestedValidationProv
 
 it('instantiates object hierarchies consistently', function () {
 
-    $manualInstantiation = (new NestedValidationProvider(
+    $manualInstantiation = new NestedValidationProvider(
         'author',
-        (new AggregateValidationProvider(
+        new AggregateValidationProvider(
             new AuthorValidationProvider(),
             new CustomValidationProvider([
-                'books' => ['required', 'array', 'min:1', 'max:2',]
+                'books' => ['required', 'array', 'min:1', 'max:2',],
+            ], [
+                'books.required' => 'Provide :attribute'
+            ], [
+                'books' => 'BOOKS'
             ]),
             new NestedValidationProvider(
                 'books',
@@ -25,14 +29,18 @@ it('instantiates object hierarchies consistently', function () {
                     new BookValidationProvider()
                 )
             )
-        ))
-    ));
+        )
+    );
 
     $facadeInstantiation = ValidationProvider::make([
         'author' => [
             AuthorValidationProvider::class,
             new CustomValidationProvider([
-                'books' => ['required', 'array', 'min:1', 'max:2',]
+                'books' => ['required', 'array', 'min:1', 'max:2',],
+            ], [
+                'books.required' => 'Provide :attribute'
+            ], [
+                'books' => 'BOOKS'
             ]),
             'books' => [
                 '*' => [
@@ -45,7 +53,11 @@ it('instantiates object hierarchies consistently', function () {
     $fluentInstantiationObjects = (new BookValidationProvider())
         ->nestedArray('books')
         ->with(new CustomValidationProvider([
-            'books' => ['required', 'array', 'min:1', 'max:2',]
+            'books' => ['required', 'array', 'min:1', 'max:2',],
+        ], [
+            'books.required' => 'Provide :attribute'
+        ], [
+            'books' => 'BOOKS'
         ]))
         ->with(new AuthorValidationProvider())
         ->nested('author');
@@ -53,7 +65,11 @@ it('instantiates object hierarchies consistently', function () {
     $fluentInstantiationClassString = (new BookValidationProvider())
         ->nestedArray('books')
         ->with(new CustomValidationProvider([
-            'books' => ['required', 'array', 'min:1', 'max:2',]
+            'books' => ['required', 'array', 'min:1', 'max:2',],
+        ], [
+            'books.required' => 'Provide :attribute'
+        ], [
+            'books' => 'BOOKS'
         ]))
         ->with(AuthorValidationProvider::class)
         ->nested('author');
@@ -68,10 +84,26 @@ it('instantiates object hierarchies consistently', function () {
     expect($manualInstantiation->rules())->toEqual($fluentInstantiationObjects->rules());
     expect($manualInstantiation->rules())->toEqual($fluentInstantiationClassString->rules());
 
+    // Expect messages to be equal
+    expect($manualInstantiation->messages())->toEqual($facadeInstantiation->messages());
+    expect($manualInstantiation->messages())->toEqual($fluentInstantiationObjects->messages());
+    expect($manualInstantiation->messages())->toEqual($fluentInstantiationClassString->messages());
+
+    // Expect attributes to be equal
+    expect($manualInstantiation->attributes())->toEqual($facadeInstantiation->attributes());
+    expect($manualInstantiation->attributes())->toEqual($fluentInstantiationObjects->attributes());
+    expect($manualInstantiation->attributes())->toEqual($fluentInstantiationClassString->attributes());
+
     expect($manualInstantiation->rules())->toEqual([
         'author.name'          => ['required'],
         'author.books'         => ['required', 'array', 'min:1', 'max:2',],
         'author.books.*.title' => ['required'],
+    ]);
+    expect($manualInstantiation->messages())->toEqual([
+        'author.books.required' => 'Provide :attribute',
+    ]);
+    expect($manualInstantiation->attributes())->toEqual([
+        'author.books' => 'BOOKS',
     ]);
 
 });
