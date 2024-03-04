@@ -72,12 +72,9 @@ abstract class AbstractValidationProvider implements ValidationProvider
 
     public function nestedArray(string $nestedKey): ValidationProvider
     {
-        return new NestedValidationProvider(
+        return new ArrayValidationProvider(
             $nestedKey,
-            new NestedValidationProvider(
-                '*',
-                $this
-            )
+            $this
         );
     }
 
