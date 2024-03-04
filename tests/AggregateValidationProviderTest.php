@@ -7,12 +7,12 @@ use IndexZer0\LaravelValidationProvider\Tests\ValidationProviders\ContactValidat
 use IndexZer0\LaravelValidationProvider\ValidationProviders\AggregateValidationProvider;
 
 it('aggregates validation rules', function () {
-    $aggregateValidationProvider = new AggregateValidationProvider(
+    $validationProvider = new AggregateValidationProvider(
         new AddressValidationProvider(),
         new ContactValidationProvider()
     );
 
-    expect($aggregateValidationProvider->rules())->toBe([
+    expect($validationProvider->rules())->toBe([
         'post_code'           => [
             'required',
             'string',
@@ -46,12 +46,12 @@ it('aggregates validation rules', function () {
 });
 
 it('aggregates validation messages', function () {
-    $aggregateValidationProvider = new AggregateValidationProvider(
+    $validationProvider = new AggregateValidationProvider(
         new AddressValidationProvider(),
         new ContactValidationProvider()
     );
 
-    expect($aggregateValidationProvider->messages())->toBe([
+    expect($validationProvider->messages())->toBe([
         'post_code.required'         => 'POST CODE is required',
         'home_phone_number.required' => 'HOME NUMBER is required',
         'email.required'             => 'EMAIL is required',
@@ -59,12 +59,12 @@ it('aggregates validation messages', function () {
 });
 
 it('aggregates validation attributes', function () {
-    $aggregateValidationProvider = new AggregateValidationProvider(
+    $validationProvider = new AggregateValidationProvider(
         new AddressValidationProvider(),
         new ContactValidationProvider()
     );
 
-    expect($aggregateValidationProvider->attributes())->toBe([
+    expect($validationProvider->attributes())->toBe([
         'street'            => 'STREET',
         'home_phone_number' => 'HOME NUMBER',
         'phone_number'      => 'PHONE NUMBER',
