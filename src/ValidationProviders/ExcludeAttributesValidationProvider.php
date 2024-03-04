@@ -38,14 +38,14 @@ class ExcludeAttributesValidationProvider extends AbstractValidationProvider
 
     private function removeAttributes(array $data): array
     {
-        return array_filter($data, function($key) {
+        return array_filter($data, function ($key) {
             return !in_array($key, $this->excludeAttributes, true);
         }, ARRAY_FILTER_USE_KEY);
     }
 
     private function removeMessages(array $data): array
     {
-        return array_filter($data, function($key) {
+        return array_filter($data, function ($key) {
 
             $keyStartsWithAnExcludedAttribute = false;
             foreach ($this->excludeAttributes as $attribute) {
