@@ -94,4 +94,4 @@ it('instantiates object hierarchies consistently', function () {
         'author.books' => 'BOOKS',
     ]);
 
-})->only();
+});
