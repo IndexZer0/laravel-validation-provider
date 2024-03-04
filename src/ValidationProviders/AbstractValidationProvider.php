@@ -61,4 +61,38 @@ abstract class AbstractValidationProvider implements ValidationProvider
     {
         return ($this->createValidator($data))->validate();
     }
+
+    public function nested(string $nestedKey): ValidationProvider
+    {
+        return new NestedValidationProvider(
+            $nestedKey,
+            $this
+        );
+    }
+
+    public function nestedArray(string $nestedKey): ValidationProvider
+    {
+        return new NestedValidationProvider(
+            $nestedKey,
+            new NestedValidationProvider(
+                '*',
+                $this
+            )
+        );
+    }
+
+    public function with(string|ValidationProvider $validationProvider): ValidationProvider
+    {
+        if (is_string($validationProvider)) {
+            if (!class_exists($validationProvider) || !is_a($validationProvider, ValidationProvider::class, true)) {
+                throw new \Exception('Class must be a ValidationProvider');
+            }
+            $validationProvider = new $validationProvider;
+        }
+
+        return new AggregateValidationProvider(
+            $validationProvider,
+            $this,
+        );
+    }
 }
