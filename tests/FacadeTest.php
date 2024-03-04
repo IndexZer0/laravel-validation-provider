@@ -104,7 +104,7 @@ it('can make from config', function (mixed $make_config, array $expected_rules) 
         ],
         'expected_rules' => [
             'author.name' => ['required'],
-            'author.books'=> ['required', 'array', 'min:1', 'max:2',],
+            'author.books' => ['required', 'array', 'min:1', 'max:2',],
             'author.books.*.title' => ['required'],
         ]
     ],
@@ -118,7 +118,7 @@ it('fails make from config', function (mixed $make_config, string $expected_exce
         ValidationProvider::make($make_config);
         $this->fail('Should have failed');
 
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
         expect($t->getMessage())->toBe($expected_exception_message);
     }
 
@@ -147,4 +147,3 @@ it('fails make from config', function (mixed $make_config, string $expected_exce
         'expected_exception_message' => 'Object must be a ValidationProvider'
     ],
 ]);
-
