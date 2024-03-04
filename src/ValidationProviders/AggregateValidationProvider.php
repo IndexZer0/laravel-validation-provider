@@ -8,7 +8,7 @@ use IndexZer0\LaravelValidationProvider\Contracts\ValidationProvider;
 
 class AggregateValidationProvider extends AbstractValidationProvider
 {
-    private readonly array $validationProviders;
+    private array $validationProviders;
 
     public function __construct(ValidationProvider ...$validationProviders)
     {
@@ -54,5 +54,23 @@ class AggregateValidationProvider extends AbstractValidationProvider
         foreach ($this->validationProviders as $validationProvider) {
             $validationProvider->prependNestedKey($nestedKey);
         }
+    }
+
+    public function with(string|ValidationProvider $validationProvider): ValidationProvider
+    {
+        if (is_string($validationProvider)) {
+            if (!class_exists($validationProvider) || !is_a($validationProvider, ValidationProvider::class, true)) {
+                throw new \Exception('Class must be a ValidationProvider');
+            }
+            $validationProvider = new $validationProvider;
+        }
+
+        $this->addValidationProvider($validationProvider);
+        return $this;
+    }
+
+    public function addValidationProvider(ValidationProvider $validationProvider)
+    {
+        array_unshift($this->validationProviders, $validationProvider);
     }
 }
