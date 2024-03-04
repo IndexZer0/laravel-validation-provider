@@ -73,4 +73,9 @@ class AggregateValidationProvider extends AbstractValidationProvider
     {
         array_unshift($this->validationProviders, $validationProvider);
     }
+
+    public function getValidationProviders(): array
+    {
+        return $this->validationProviders;
+    }
 }
