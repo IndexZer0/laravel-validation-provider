@@ -23,7 +23,7 @@ class ValidationProviderFactory
             if (!class_exists($config) || !is_a($config, ValidationProvider::class, true)) {
                 throw new \Exception('Class must be a ValidationProvider');
             }
-            return new $config;
+            return new $config();
         }
 
         return self::handleMakeArray($config);
