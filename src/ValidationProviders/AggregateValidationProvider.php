@@ -17,6 +17,12 @@ class AggregateValidationProvider extends AbstractValidationProvider
         $this->validationProviders = $validationProviders;
     }
 
+    /*
+     * --------------------------------
+     * Core
+     * --------------------------------
+     */
+
     public function rules(): array
     {
         $rules = [];
@@ -49,6 +55,12 @@ class AggregateValidationProvider extends AbstractValidationProvider
 
         return $attributes;
     }
+
+    /*
+     * --------------------------------
+     * Fluent API
+     * --------------------------------
+     */
 
     public function with(string|ValidationProvider $validationProvider): ValidationProvider
     {

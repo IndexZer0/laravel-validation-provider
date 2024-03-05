@@ -12,6 +12,12 @@ abstract class AbstractValidationProvider implements ValidationProvider
 {
     protected array $nestedKey = [];
 
+    /*
+     * --------------------------------
+     * Core
+     * --------------------------------
+     */
+
     public function rules(): array
     {
         return [];
@@ -26,6 +32,12 @@ abstract class AbstractValidationProvider implements ValidationProvider
     {
         return [];
     }
+
+    /*
+     * --------------------------------
+     * Nesting Support
+     * --------------------------------
+     */
 
     public function dependentField(string $otherField): string
     {
@@ -43,10 +55,11 @@ abstract class AbstractValidationProvider implements ValidationProvider
         array_unshift($this->nestedKey, $nestedKey);
     }
 
-    protected function getNestedKeyDotNotation(): string
-    {
-        return join('.', $this->nestedKey);
-    }
+    /*
+     * --------------------------------
+     * Convenience methods
+     * --------------------------------
+     */
 
     public function createValidator($data): Validator
     {
@@ -62,6 +75,12 @@ abstract class AbstractValidationProvider implements ValidationProvider
     {
         return ($this->createValidator($data))->validate();
     }
+
+    /*
+     * --------------------------------
+     * Fluent API
+     * --------------------------------
+     */
 
     public function nested(string $nestedKey): ValidationProvider
     {
@@ -85,5 +104,16 @@ abstract class AbstractValidationProvider implements ValidationProvider
     public function exclude(array $attributes): ValidationProvider
     {
         return new ExcludeAttributesValidationProvider($attributes, $this);
+    }
+
+    /*
+     * --------------------------------
+     * Helpers
+     * --------------------------------
+     */
+
+    protected function getNestedKeyDotNotation(): string
+    {
+        return join('.', $this->nestedKey);
     }
 }

@@ -8,4 +8,5 @@ use IndexZer0\LaravelValidationProvider\ValidationProviders\AbstractValidationPr
 
 class EmptyValidationProvider extends AbstractValidationProvider
 {
+    // Class exists to test parent methods in AbstractValidationProvider.
 }

@@ -18,6 +18,12 @@ class NestedValidationProvider extends AbstractValidationProvider
         $this->prependNestedKey($nestedKey);
     }
 
+    /*
+     * --------------------------------
+     * Core
+     * --------------------------------
+     */
+
     public function rules(): array
     {
         return $this->mapWithKeys($this->validationProvider->rules());
@@ -32,6 +38,12 @@ class NestedValidationProvider extends AbstractValidationProvider
     {
         return $this->mapWithKeys($this->validationProvider->attributes());
     }
+
+    /*
+     * --------------------------------
+     * Helpers
+     * --------------------------------
+     */
 
     protected function getNestedKeyPrefix(): string
     {

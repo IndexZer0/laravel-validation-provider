@@ -13,6 +13,12 @@ class CustomValidationProvider extends AbstractValidationProvider
     ) {
     }
 
+    /*
+     * --------------------------------
+     * Core
+     * --------------------------------
+     */
+
     public function rules(): array
     {
         return $this->rules;
