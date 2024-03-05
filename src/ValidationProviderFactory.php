@@ -11,7 +11,7 @@ use IndexZer0\LaravelValidationProvider\ValidationProviders\NestedValidationProv
 
 class ValidationProviderFactory
 {
-    public static function make(ValidationProvider|string|array $config): ValidationProvider
+    public function make(ValidationProvider|string|array $config): ValidationProvider
     {
         if (is_a($config, ValidationProvider::class)) {
             return $config;
@@ -25,14 +25,14 @@ class ValidationProviderFactory
             throw new InvalidArgumentException('Empty array provided');
         }
 
-        return self::makeFromArray($config);
+        return $this->makeFromArray($config);
     }
 
-    private static function makeFromArray(array $config): ValidationProvider
+    private function makeFromArray(array $config): ValidationProvider
     {
         $validationProviders = [];
         foreach ($config as $key => $value) {
-            $validationProviders[] = self::makeArrayElement($key, $value);
+            $validationProviders[] = $this->makeArrayElement($key, $value);
         }
 
         if (count($validationProviders) < 2) {
@@ -42,16 +42,16 @@ class ValidationProviderFactory
         return new AggregateValidationProvider(...$validationProviders);
     }
 
-    private static function makeArrayElement($key, $value): ValidationProvider
+    private function makeArrayElement($key, $value): ValidationProvider
     {
         if (is_string($key)) {
             return new NestedValidationProvider(
                 $key,
-                self::make($value),
+                $this->make($value),
             );
         }
 
-        return self::make($value);
+        return $this->make($value);
     }
 
     public static function instantiateValidationProvider(string $fqcn): ValidationProvider
