@@ -56,9 +56,6 @@ class AggregateValidationProvider extends AbstractValidationProvider
             $validationProvider = ValidationProviderFactory::instantiateValidationProvider($validationProvider);
         }
 
-        return new self(
-            $validationProvider,
-            ...$this->validationProviders
-        );
+        return new self($validationProvider, ...$this->validationProviders);
     }
 }

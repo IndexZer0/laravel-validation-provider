@@ -6,6 +6,7 @@ use IndexZer0\LaravelValidationProvider\Tests\ValidationProviders\AuthorValidati
 use IndexZer0\LaravelValidationProvider\Tests\ValidationProviders\BookValidationProvider;
 use IndexZer0\LaravelValidationProvider\ValidationProviders\AggregateValidationProvider;
 use IndexZer0\LaravelValidationProvider\ValidationProviders\ArrayValidationProvider;
+use IndexZer0\LaravelValidationProvider\ValidationProviders\ExcludeAttributesValidationProvider;
 use IndexZer0\LaravelValidationProvider\ValidationProviders\NestedValidationProvider;
 
 it('can nest', function () {
@@ -50,6 +51,18 @@ it('can aggregate', function () {
         'title' => ['required',],
         'name' => ['required',],
     ]);
+
+});
+
+it('can exclude', function () {
+
+    $validationProvider = (new AuthorValidationProvider())
+        ->exclude(['name']);
+
+    expect($validationProvider)->toBeInstanceOf(ExcludeAttributesValidationProvider::class);
+    expect($validationProvider->validationProvider)->toBeInstanceOf(AuthorValidationProvider::class);
+
+    expect($validationProvider->rules())->toEqual([]);
 
 });
 

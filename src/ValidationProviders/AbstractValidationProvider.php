@@ -65,18 +65,12 @@ abstract class AbstractValidationProvider implements ValidationProvider
 
     public function nested(string $nestedKey): ValidationProvider
     {
-        return new NestedValidationProvider(
-            $nestedKey,
-            $this
-        );
+        return new NestedValidationProvider($nestedKey, $this);
     }
 
     public function nestedArray(string $nestedKey): ValidationProvider
     {
-        return new ArrayValidationProvider(
-            $nestedKey,
-            $this
-        );
+        return new ArrayValidationProvider($nestedKey, $this);
     }
 
     public function with(string|ValidationProvider $validationProvider): ValidationProvider
@@ -85,9 +79,11 @@ abstract class AbstractValidationProvider implements ValidationProvider
             $validationProvider = ValidationProviderFactory::instantiateValidationProvider($validationProvider);
         }
 
-        return new AggregateValidationProvider(
-            $validationProvider,
-            $this,
-        );
+        return new AggregateValidationProvider($validationProvider, $this);
+    }
+
+    public function exclude(array $attributes): ValidationProvider
+    {
+        return new ExcludeAttributesValidationProvider($attributes, $this);
     }
 }

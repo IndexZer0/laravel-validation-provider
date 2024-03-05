@@ -340,11 +340,12 @@ $validationProvider->rules();
 
 #### Using Fluent API
 
-| Method                                                                | Returns                       |
-|-----------------------------------------------------------------------|-------------------------------|
-| `nested(string $nestedKey)`                                           | `NestedValidationProvider`    |
-| `nestedArray(string $nestedKey)`                                      | `ArrayValidationProvider`     |
-| <code>with(string&#124;ValidationProvider $validationProvider)</code> | `AggregateValidationProvider` |
+| Method                                                                | Returns                               |
+|-----------------------------------------------------------------------|---------------------------------------|
+| `nested(string $nestedKey)`                                           | `NestedValidationProvider`            |
+| `nestedArray(string $nestedKey)`                                      | `ArrayValidationProvider`             |
+| <code>with(string&#124;ValidationProvider $validationProvider)</code> | `AggregateValidationProvider`         |
+| `exclude(array $attributes)`                                          | `ExcludeAttributesValidationProvider` |
 
 #### Using Facade
 

@@ -41,4 +41,5 @@ interface ValidationProvider
     public function nested(string $nestedKey): ValidationProvider;
     public function nestedArray(string $nestedKey): ValidationProvider;
     public function with(string|ValidationProvider $validationProvider): ValidationProvider;
+    public function exclude(array $attributes): ValidationProvider;
 }
