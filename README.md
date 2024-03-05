@@ -7,10 +7,10 @@
 
 ---
 
-- Write all your validation definitions in clean reusable composable providers.
-- Standardise the way you define and use validation in `Form Requests` and elsewhere.
-- Easily compose validation using multiple validation providers.
-- Conveniently create and validate data straight from the `ValidationProvider`.
+- Write all your validation rules in clean reusable composable providers.
+- **Standardise** the way you define and use validation in `Form Requests` and elsewhere.
+- **Easily** compose validation rules using multiple validation providers.
+- **Conveniently** create and validate data straight from the `ValidationProvider`.
 
 ---
 - [Requirements](#requirements)
