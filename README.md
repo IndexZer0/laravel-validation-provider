@@ -38,6 +38,8 @@
   - [Dependent Rules](#dependent-rules)
   - [Error Handling](#error-handling)
 - [Package Offering](#package-offering)
+- [Changelog](#changelog)
+- [Contributing](#contributing)
 
 ---
 
