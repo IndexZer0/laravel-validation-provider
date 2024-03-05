@@ -118,8 +118,8 @@ it('fails make from config', function (mixed $make_config, string $expected_exce
         ValidationProvider::make($make_config);
         $this->fail('Should have failed');
 
-    } catch (Throwable $t) {
-        expect($t->getMessage())->toBe($expected_exception_message);
+    } catch (\IndexZer0\LaravelValidationProvider\Exceptions\InvalidArgumentException $invalidArgumentException) {
+        expect($invalidArgumentException->getMessage())->toBe($expected_exception_message);
     }
 
 })->with([
@@ -134,4 +134,9 @@ it('fails make from config', function (mixed $make_config, string $expected_exce
         ],
         'expected_exception_message' => 'Class must be a ValidationProvider',
     ],
+
+    'empty array' => [
+        'make_config' => [],
+        'expected_exception_message' => 'Empty array provided',
+    ]
 ]);
