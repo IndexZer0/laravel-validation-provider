@@ -53,7 +53,7 @@ it('can aggregate', function () {
 
 });
 
-it('fails when passing a non ValidationProvider class as string', function (mixed $fqcn) {
+it('fails when passing a non ValidationProvider class as string', function (string $fqcn) {
 
     try {
         (new AuthorValidationProvider())
@@ -61,8 +61,8 @@ it('fails when passing a non ValidationProvider class as string', function (mixe
 
         $this->fail('Should have failed');
 
-    } catch (Throwable $t) {
-        expect($t->getMessage())->toBe('Class must be a ValidationProvider');
+    } catch (\IndexZer0\LaravelValidationProvider\Exceptions\InvalidArgumentException $invalidArgumentException) {
+        expect($invalidArgumentException->getMessage())->toBe('Class must be a ValidationProvider');
     }
 
 })->with([
