@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace IndexZer0\LaravelValidationProvider;
 
 use IndexZer0\LaravelValidationProvider\Contracts\ValidationProvider;
+use IndexZer0\LaravelValidationProvider\Exceptions\InvalidArgumentException;
 use IndexZer0\LaravelValidationProvider\ValidationProviders\AggregateValidationProvider;
 use IndexZer0\LaravelValidationProvider\ValidationProviders\NestedValidationProvider;
 
@@ -18,6 +19,10 @@ class ValidationProviderFactory
 
         if (is_string($config)) {
             return ValidationProviderFactory::instantiateValidationProvider($config);
+        }
+
+        if (count($config) < 1) {
+            throw new InvalidArgumentException('Empty array provided');
         }
 
         return self::makeFromArray($config);
@@ -58,7 +63,7 @@ class ValidationProviderFactory
     private static function ensureFqcnIsValidationProvider(string $fqcn): void
     {
         if (!class_exists($fqcn) || !is_a($fqcn, ValidationProvider::class, true)) {
-            throw new \Exception('Class must be a ValidationProvider');
+            throw new InvalidArgumentException('Class must be a ValidationProvider');
         }
     }
 }
