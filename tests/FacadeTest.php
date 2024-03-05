@@ -118,7 +118,7 @@ it('fails make from config', function (mixed $make_config, string $expected_exce
         ValidationProvider::make($make_config);
         $this->fail('Should have failed');
 
-    } catch (\IndexZer0\LaravelValidationProvider\Exceptions\InvalidArgumentException $invalidArgumentException) {
+    } catch (IndexZer0\LaravelValidationProvider\Exceptions\InvalidArgumentException $invalidArgumentException) {
         expect($invalidArgumentException->getMessage())->toBe($expected_exception_message);
     }
 

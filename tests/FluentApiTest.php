@@ -74,7 +74,7 @@ it('fails when passing a non ValidationProvider class as string', function (stri
 
         $this->fail('Should have failed');
 
-    } catch (\IndexZer0\LaravelValidationProvider\Exceptions\InvalidArgumentException $invalidArgumentException) {
+    } catch (IndexZer0\LaravelValidationProvider\Exceptions\InvalidArgumentException $invalidArgumentException) {
         expect($invalidArgumentException->getMessage())->toBe('Class must be a ValidationProvider');
     }
 
