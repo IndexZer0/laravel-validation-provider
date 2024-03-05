@@ -395,6 +395,7 @@ $validationProvider = ValidationProvider::make([
 - Array string keys create `NestedValidationProvider`.
 
 ```php
+// Returns NestedValidationProvider
 $validationProvider = ValidationProvider::make([
     'author' => [
         AuthorValidationProvider::class,
@@ -405,6 +406,7 @@ $validationProvider = ValidationProvider::make([
 - Empty array is invalid.
 
 ```php
+// throws ValidationProviderExceptionInterface
 try {
     $validationProvider = ValidationProvider::make([]);
 } catch (\IndexZer0\LaravelValidationProvider\Contracts\ValidationProviderExceptionInterface $exception) {
