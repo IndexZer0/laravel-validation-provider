@@ -5,15 +5,23 @@ declare(strict_types=1);
 namespace IndexZer0\LaravelValidationProvider\ValidationProviders;
 
 use IndexZer0\LaravelValidationProvider\Contracts\ValidationProvider;
+use IndexZer0\LaravelValidationProvider\Traits\HasValidationProviderChildren;
+use IndexZer0\LaravelValidationProvider\ValidationProviderFactory;
 
 class AggregateValidationProvider extends AbstractValidationProvider
 {
-    private readonly array $validationProviders;
+    use HasValidationProviderChildren;
 
     public function __construct(ValidationProvider ...$validationProviders)
     {
         $this->validationProviders = $validationProviders;
     }
+
+    /*
+     * --------------------------------
+     * Core
+     * --------------------------------
+     */
 
     public function rules(): array
     {
@@ -48,11 +56,18 @@ class AggregateValidationProvider extends AbstractValidationProvider
         return $attributes;
     }
 
-    public function prependNestedKey(string $nestedKey): void
+    /*
+     * --------------------------------
+     * Fluent API
+     * --------------------------------
+     */
+
+    public function with(string|ValidationProvider $validationProvider): ValidationProvider
     {
-        parent::prependNestedKey($nestedKey);
-        foreach ($this->validationProviders as $validationProvider) {
-            $validationProvider->prependNestedKey($nestedKey);
+        if (is_string($validationProvider)) {
+            $validationProvider = ValidationProviderFactory::instantiateValidationProvider($validationProvider);
         }
+
+        return new self($validationProvider, ...$this->validationProviders);
     }
 }

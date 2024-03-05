@@ -6,7 +6,12 @@ namespace IndexZer0\LaravelValidationProvider\Tests\ValidationProviders;
 
 use IndexZer0\LaravelValidationProvider\ValidationProviders\AbstractValidationProvider;
 
-class EmptyValidationProvider extends AbstractValidationProvider
+class BookValidationProvider extends AbstractValidationProvider
 {
-    // Class exists to test parent methods in AbstractValidationProvider.
+    public function rules(): array
+    {
+        return [
+            'title' => ['required',],
+        ];
+    }
 }

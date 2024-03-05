@@ -8,12 +8,12 @@ use IndexZer0\LaravelValidationProvider\ValidationProviders\AggregateValidationP
 use IndexZer0\LaravelValidationProvider\ValidationProviders\NestedValidationProvider;
 
 it('nests validation rules', function () {
-    $nestedValidationProvider = new NestedValidationProvider(
+    $validationProvider = new NestedValidationProvider(
         'address',
         new AddressValidationProvider(),
     );
 
-    expect($nestedValidationProvider->rules())->toBe([
+    expect($validationProvider->rules())->toBe([
         'address.post_code'           => [
             'required',
             'string',
@@ -34,24 +34,24 @@ it('nests validation rules', function () {
 });
 
 it('nests validation messages', function () {
-    $nestedValidationProvider = new NestedValidationProvider(
+    $validationProvider = new NestedValidationProvider(
         'address',
         new AddressValidationProvider(),
     );
 
-    expect($nestedValidationProvider->messages())->toBe([
+    expect($validationProvider->messages())->toBe([
         'address.post_code.required' => 'POST CODE is required',
         'address.home_phone_number.required' => 'HOME PHONE NUMBER is required',
     ]);
 });
 
 it('nests validation attributes', function () {
-    $nestedValidationProvider = new NestedValidationProvider(
+    $validationProvider = new NestedValidationProvider(
         'address',
         new AddressValidationProvider()
     );
 
-    expect($nestedValidationProvider->attributes())->toBe([
+    expect($validationProvider->attributes())->toBe([
         'address.street' => 'STREET',
         'address.home_phone_number' => 'HOME PHONE NUMBER',
     ]);
@@ -59,7 +59,7 @@ it('nests validation attributes', function () {
 
 it('nests validation rules | two nests', function () {
 
-    $nestedValidationProvider = new NestedValidationProvider(
+    $validationProvider = new NestedValidationProvider(
         'user',
         new NestedValidationProvider(
             'address',
@@ -67,7 +67,7 @@ it('nests validation rules | two nests', function () {
         ),
     );
 
-    expect($nestedValidationProvider->rules())->toBe([
+    expect($validationProvider->rules())->toBe([
         'user.address.post_code'           => [
             'required',
             'string',
@@ -89,7 +89,7 @@ it('nests validation rules | two nests', function () {
 
 it('nests validation rules with aggregate', function () {
 
-    $nestedValidationProvider = new NestedValidationProvider(
+    $validationProvider = new NestedValidationProvider(
         'user',
         new AggregateValidationProvider(
             new NestedValidationProvider(
@@ -100,7 +100,7 @@ it('nests validation rules with aggregate', function () {
         )
     );
 
-    expect($nestedValidationProvider->rules())->toBe([
+    expect($validationProvider->rules())->toBe([
         'user.address.post_code'           => [
             'required',
             'string',
@@ -136,25 +136,25 @@ it('nests validation rules with aggregate', function () {
     ]);
 });
 
-it('nests validation rules | array dot astrix notation', function () {
-    $nestedValidationProvider = new NestedValidationProvider(
-        'address.*',
+it('nests validation rules | can function as ArrayValidationProvider by using array dot astrix notation', function () {
+    $validationProvider = new NestedValidationProvider(
+        'addresses.*',
         new AddressValidationProvider(),
     );
 
-    expect($nestedValidationProvider->rules())->toBe([
-        'address.*.post_code'           => [
+    expect($validationProvider->rules())->toBe([
+        'addresses.*.post_code'           => [
             'required',
             'string',
             'min:1',
-            'required_if:address.*.street,something'
+            'required_if:addresses.*.street,something'
         ],
-        'address.*.street'              => [
+        'addresses.*.street'              => [
             'required',
             'string',
             'min:1',
         ],
-        'address.*.home_phone_number'   => [
+        'addresses.*.home_phone_number'   => [
             'required',
             'string',
             'min:1',
