@@ -220,7 +220,7 @@ class StoreAddressRequest extends ValidationProviderFormRequest
 
 `HasValidationProvider` is provided to decorate your existing form requests.
 
-Sometimes don't have the ability to extend `ValidationProviderFormRequest`. You can instead use the `HasValidationProvider` trait in your existing form request.
+Sometimes you don't have the ability to extend `ValidationProviderFormRequest`. You can instead use the `HasValidationProvider` trait in your existing form request.
 
 ```php
 class StoreAddressRequest extends YourOwnExistingFormRequest
