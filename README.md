@@ -13,6 +13,45 @@
 - **Conveniently** create and validate data straight from the `ValidationProvider`.
 
 ---
+
+## Simple example
+- Nesting domain model rules within arrays.
+
+```php
+use IndexZer0\LaravelValidationProvider\Facades\ValidationProvider;
+
+class AuthorValidationProvider extends AbstractValidationProvider
+{
+    public function rules(): array
+    {
+        return ['name' => ['required'],];
+    }
+}
+
+class BookValidationProvider extends AbstractValidationProvider
+{
+    public function rules(): array
+    {
+        return ['title' => ['required',],];
+    }
+}
+
+$validationProvider = ValidationProvider::make([
+    'author' => [
+        AuthorValidationProvider::class,
+        new ArrayValidationProvider('books', new BookValidationProvider()),
+    ],
+]);
+$validationProvider->rules();
+// [
+//     'author.name'          => ['required'],
+//     'author.books.*.title' => ['required'],
+// ]
+```
+
+---
+
+- [Simple Example](#simple-example)
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Usage](#usage)
