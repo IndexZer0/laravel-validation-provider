@@ -155,5 +155,12 @@ it('fails make from config', function (mixed $make_config, string $expected_exce
     'empty array' => [
         'make_config'                => [],
         'expected_exception_message' => 'Empty array provided',
+    ],
+
+    'empty array in nested' => [
+        'make_config'                => [
+            'something' => []
+        ],
+        'expected_exception_message' => 'Empty array provided',
     ]
 ]);
