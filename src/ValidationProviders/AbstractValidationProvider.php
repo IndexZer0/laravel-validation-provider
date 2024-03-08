@@ -112,6 +112,11 @@ abstract class AbstractValidationProvider implements ValidationProvider
         return new ExcludeAttributesValidationProvider($attributes, $this);
     }
 
+    public function map(array $attributes): ValidationProvider
+    {
+        return new MapAttributesValidationProvider($attributes, $this);
+    }
+
     /*
      * --------------------------------
      * Helpers
