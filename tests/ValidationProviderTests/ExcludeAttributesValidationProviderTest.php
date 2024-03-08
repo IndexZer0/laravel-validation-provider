@@ -6,7 +6,7 @@ use IndexZer0\LaravelValidationProvider\Tests\ValidationProviders\AddressValidat
 use IndexZer0\LaravelValidationProvider\ValidationProviders\ExcludeAttributesValidationProvider;
 use IndexZer0\LaravelValidationProvider\ValidationProviders\NestedValidationProvider;
 
-it('can exclude rules, messages and attributes', function () {
+it('can exclude rules, messages, and attributes', function () {
 
     $validationProvider = new ExcludeAttributesValidationProvider(
         ['address.post_code', 'address.street'],
