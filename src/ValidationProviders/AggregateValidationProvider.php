@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace IndexZer0\LaravelValidationProvider\ValidationProviders;
 
 use IndexZer0\LaravelValidationProvider\Contracts\ValidationProvider;
+use IndexZer0\LaravelValidationProvider\Helpers\ObjectHelper;
 use IndexZer0\LaravelValidationProvider\Traits\HasValidationProviderChildren;
-use IndexZer0\LaravelValidationProvider\ValidationProviderFactory;
 
 class AggregateValidationProvider extends AbstractValidationProvider
 {
@@ -65,7 +65,7 @@ class AggregateValidationProvider extends AbstractValidationProvider
     public function with(string|ValidationProvider $validationProvider): ValidationProvider
     {
         if (is_string($validationProvider)) {
-            $validationProvider = ValidationProviderFactory::instantiateValidationProvider($validationProvider);
+            $validationProvider = ObjectHelper::instantiateValidationProvider($validationProvider);
         }
 
         return new self($validationProvider, ...$this->validationProviders);
