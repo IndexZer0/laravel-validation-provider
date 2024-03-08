@@ -8,6 +8,8 @@ use IndexZer0\LaravelValidationProvider\Tests\ValidationProviders\BookValidation
 use IndexZer0\LaravelValidationProvider\ValidationProviders\AggregateValidationProvider;
 use IndexZer0\LaravelValidationProvider\ValidationProviders\ArrayValidationProvider;
 use IndexZer0\LaravelValidationProvider\ValidationProviders\CustomValidationProvider;
+use IndexZer0\LaravelValidationProvider\ValidationProviders\ExcludeAttributesValidationProvider;
+use IndexZer0\LaravelValidationProvider\ValidationProviders\MapAttributesValidationProvider;
 use IndexZer0\LaravelValidationProvider\ValidationProviders\NestedValidationProvider;
 
 it('instantiates object hierarchies consistently', function () {
@@ -29,7 +31,15 @@ it('instantiates object hierarchies consistently', function () {
         new AggregateValidationProvider(
             new AuthorValidationProvider(),
             new CustomValidationProvider($customRules, $customMessages, $customAttributes),
-            new ArrayValidationProvider('books', new BookValidationProvider())
+            new ArrayValidationProvider('books',
+                new MapAttributesValidationProvider(
+                    ['title' => 'real_title'],
+                    new ExcludeAttributesValidationProvider(
+                        ['description'],
+                        new BookValidationProvider()
+                    )
+                )
+            )
         )
     );
 
@@ -37,17 +47,29 @@ it('instantiates object hierarchies consistently', function () {
         'author' => [
             AuthorValidationProvider::class,
             new CustomValidationProvider($customRules, $customMessages, $customAttributes),
-            new ArrayValidationProvider('books', new BookValidationProvider()),
+            new ArrayValidationProvider('books',
+                new MapAttributesValidationProvider(
+                    ['title' => 'real_title'],
+                    new ExcludeAttributesValidationProvider(
+                        ['description'],
+                        new BookValidationProvider()
+                    )
+                )
+            ),
         ],
     ]);
 
     $fluentInstantiationObjects = (new BookValidationProvider())
+        ->exclude(['description'])
+        ->map(['title' => 'real_title'])
         ->nestedArray('books')
         ->with(new CustomValidationProvider($customRules, $customMessages, $customAttributes))
         ->with(new AuthorValidationProvider())
         ->nested('author');
 
     $fluentInstantiationClassString = (new BookValidationProvider())
+        ->exclude(['description'])
+        ->map(['title' => 'real_title'])
         ->nestedArray('books')
         ->with(new CustomValidationProvider($customRules, $customMessages, $customAttributes))
         ->with(AuthorValidationProvider::class)
@@ -74,15 +96,17 @@ it('instantiates object hierarchies consistently', function () {
     expect($manualInstantiation->attributes())->toEqual($fluentInstantiationClassString->attributes());
 
     expect($manualInstantiation->rules())->toEqual([
-        'author.name'          => ['required'],
-        'author.books'         => ['required', 'array', 'min:1', 'max:2',],
-        'author.books.*.title' => ['required'],
+        'author.name'               => ['required'],
+        'author.books'              => ['required', 'array', 'min:1', 'max:2',],
+        'author.books.*.real_title' => ['required'],
     ]);
     expect($manualInstantiation->messages())->toEqual([
-        'author.books.required' => 'Provide :attribute',
+        'author.books.required'              => 'Provide :attribute',
+        'author.books.*.real_title.required' => ':attribute IS REQUIRED',
     ]);
     expect($manualInstantiation->attributes())->toEqual([
-        'author.books' => 'BOOKS',
+        'author.books'              => 'BOOKS',
+        'author.books.*.real_title' => 'TITLE',
     ]);
 
 });
