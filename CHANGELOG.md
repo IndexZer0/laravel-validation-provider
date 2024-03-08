@@ -2,6 +2,15 @@
 
 All notable changes to `laravel-validation-provider` will be documented in this file.
 
+## v2.1.0 - 2024-03-08
+### Added
+- Ability to define validation `rules`, `messages` and `attributes` by class properties.
+- New core validation provider.
+    - `MapAttributesValidationProvider`.
+- Fluent API.
+    - `map()`
+- Documentation updates.
+
 ## v2.0.0 - 2024-03-05
 ### Added
 - Fluent API.

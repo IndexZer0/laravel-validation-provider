@@ -397,8 +397,8 @@ class ExcludeAttributesValidationProvider extends AbstractValidationProvider {}
 $validationProvider = new ExcludeAttributesValidationProvider(
     ['one'],
     new CustomValidationProvider([
-        'one' => ['required',],
-        'two' => ['required',]
+        'one' => ['required'],
+        'two' => ['required']
     ])
 );
 $validationProvider->rules();
