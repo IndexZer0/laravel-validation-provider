@@ -48,8 +48,9 @@ it('can aggregate', function () {
     expect($validationProviders[1])->toBeInstanceOf(AuthorValidationProvider::class);
 
     expect($validationProvider->rules())->toEqual([
-        'title' => ['required',],
-        'name' => ['required',],
+        'title'       => ['required',],
+        'description' => ['required',],
+        'name'        => ['required',],
     ]);
 
 });
