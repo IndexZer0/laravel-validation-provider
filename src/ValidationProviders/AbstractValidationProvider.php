@@ -12,6 +12,12 @@ abstract class AbstractValidationProvider implements ValidationProvider
 {
     protected array $nestedKey = [];
 
+    protected array $rules = [];
+
+    protected array $messages = [];
+
+    protected array $attributes = [];
+
     /*
      * --------------------------------
      * Core
@@ -20,17 +26,17 @@ abstract class AbstractValidationProvider implements ValidationProvider
 
     public function rules(): array
     {
-        return [];
+        return $this->rules;
     }
 
     public function messages(): array
     {
-        return [];
+        return $this->messages;
     }
 
     public function attributes(): array
     {
-        return [];
+        return $this->attributes;
     }
 
     /*
