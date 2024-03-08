@@ -12,6 +12,21 @@ class BookValidationProvider extends AbstractValidationProvider
     {
         return [
             'title' => ['required',],
+            'description' => ['required',],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'title.required' => ':attribute IS REQUIRED',
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'title' => 'TITLE',
         ];
     }
 }
