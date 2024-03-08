@@ -8,10 +8,17 @@ use IndexZer0\LaravelValidationProvider\ValidationProviders\AbstractValidationPr
 
 class BookValidationProvider extends AbstractValidationProvider
 {
-    public function rules(): array
-    {
-        return [
-            'title' => ['required',],
-        ];
-    }
+    protected array $rules = [
+        'title'       => ['required',],
+        'description' => ['required',],
+    ];
+
+    protected array $messages = [
+        'title.required' => ':attribute IS REQUIRED',
+    ];
+
+    protected array $attributes = [
+        'title' => 'TITLE',
+    ];
+
 }

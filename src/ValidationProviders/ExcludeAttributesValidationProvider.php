@@ -30,7 +30,7 @@ class ExcludeAttributesValidationProvider extends AbstractValidationProvider
 
     public function messages(): array
     {
-        return $this->removeMessages($this->validationProvider->messages());
+        return $this->removeMessages();
     }
 
     public function attributes(): array
@@ -51,9 +51,9 @@ class ExcludeAttributesValidationProvider extends AbstractValidationProvider
         }, ARRAY_FILTER_USE_KEY);
     }
 
-    private function removeMessages(array $data): array
+    private function removeMessages(): array
     {
-        return array_filter($data, function ($key) {
+        return array_filter($this->validationProvider->messages(), function ($key) {
 
             $keyStartsWithAnExcludedAttribute = false;
             foreach ($this->excludeAttributes as $attribute) {

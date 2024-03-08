@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace IndexZer0\LaravelValidationProvider\ValidationProviders;
 
 use IndexZer0\LaravelValidationProvider\Contracts\ValidationProvider;
+use IndexZer0\LaravelValidationProvider\Helpers\ArrayHelper;
 use IndexZer0\LaravelValidationProvider\Traits\HasValidationProviderChild;
 
 class NestedValidationProvider extends AbstractValidationProvider
@@ -52,19 +53,8 @@ class NestedValidationProvider extends AbstractValidationProvider
 
     private function mapWithKeys(array $array): array
     {
-        $result = [];
-
-        foreach ($array as $key => $value) {
-
-            $assoc = (function ($value, $key) {
-                return [join('.', [$this->getNestedKeyPrefix(), $key]) => $value];
-            })($value, $key);
-
-            foreach ($assoc as $mapKey => $mapValue) {
-                $result[$mapKey] = $mapValue;
-            }
-        }
-
-        return $result;
+        return ArrayHelper::mapWithKeys($array, function ($value, $key) {
+            return [join('.', [$this->getNestedKeyPrefix(), $key]) => $value];
+        });
     }
 }

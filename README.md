@@ -22,18 +22,12 @@ use IndexZer0\LaravelValidationProvider\Facades\ValidationProvider;
 
 class AuthorValidationProvider extends AbstractValidationProvider
 {
-    public function rules(): array
-    {
-        return ['name' => ['required'],];
-    }
+    protected array $rules = ['name' => ['required']];
 }
 
 class BookValidationProvider extends AbstractValidationProvider
 {
-    public function rules(): array
-    {
-        return ['title' => ['required',],];
-    }
+    protected array $rules = ['title' => ['required']];
 }
 
 $validationProvider = ValidationProvider::make([
@@ -56,9 +50,11 @@ $validationProvider->rules();
 - [Installation](#installation)
 - [Usage](#usage)
   - [Defining Validation Providers](#defining-validation-providers)
+    - [Via Properties](#via-properties)
+    - [Via Methods](#via-methods)
   - [Creating Validation Providers](#creating-validation-providers)
-    - [Manual Creation](#manual-creation)
     - [Facade](#facade)
+    - [Manual Creation](#manual-creation)
     - [Fluent API](#fluent-api)
   - [Service/Action Class Usage](#serviceaction-class-usage)
   - [Form Requests Usage](#form-requests-usage)
@@ -70,6 +66,7 @@ $validationProvider->rules();
     - [Array Validation Provider](#array-validation-provider)
     - [Custom Validation Provider](#custom-validation-provider)
     - [Exclude Attributes Validation Provider](#exclude-attributes-validation-provider)
+    - [Map Attributes Validation Provider](#map-attributes-validation-provider)
   - [Digging Deeper](#digging-deeper)
     - [Using Fluent API](#using-fluent-api)
     - [Using Facade](#using-facade)
@@ -106,18 +103,43 @@ composer require indexzer0/laravel-validation-provider
 - Create granular representations of domain concepts in validation provider classes.
   - Should extend `AbstractValidationProvider`.
 
+#### Via Properties
+
+`$rules`, `$messages`, `$attributes`
+
+```php
+class AddressValidationProvider extends AbstractValidationProvider
+{
+    protected array $rules = [
+        'post_code' => ['required', 'string', 'between:1,20'],
+    ];
+
+    protected array $messages = [];
+   
+    protected array $attributes = [];
+}
+```
+
+#### Via Methods
+
+- You can also define methods `rules()`, `messages()`, `attributes()`.
+  - Sometimes you need to dynamically define rules, messages and attributes.
+  - You are using a [dependent](https://github.com/laravel/framework/blob/5e95946a8283a8d5c015035793f9c61c297e937f/src/Illuminate/Validation/Validator.php#L236) rule.
+    - See [Dependent Rules](#dependent-rules) for more info.
+
 ```php
 class AddressValidationProvider extends AbstractValidationProvider
 {
     public function rules(): array
     {
         return [
-            'post_code' => ['required', 'string', 'between:1,20'],
+            'post_code' => ['required', 'string', "regex:" . RegexHelper::getPostCodeRegex()],
+            'zip_code' => ["same:{$this->dependentField('post_code')}"]
         ];
     }
-
+    
     public function messages(): array { return []; }
-   
+    
     public function attributes(): array { return []; }
 }
 ```
@@ -126,52 +148,32 @@ class AddressValidationProvider extends AbstractValidationProvider
 
 ### Creating Validation Providers
 
-There are 3 ways to create validation providers.
+There are 3 ways to create validation providers. `Facade`, `Manual Creation`, and `Fluent API`.
 
-In all 3 examples, were going to use the following two defined validation providers along-side this packages core validation providers to achieve validation rules of:
+In all 3 examples, were going to use the following two defined validation providers along-side this packages [core validation providers](#available-validation-providers) to achieve validation rules of:
 
 ```php
 class AuthorValidationProvider extends AbstractValidationProvider
 {
-    public function rules(): array
-    {
-        return ['name' => ['required'],];
-    }
+    protected array $rules = ['name' => ['required'],];
 }
 
 class BookValidationProvider extends AbstractValidationProvider
 {
-    public function rules(): array
-    {
-        return ['title' => ['required',],];
-    }
+    protected array $rules = ['title' => ['required',],];
 }
 
 // Desired validation rules:
 // [
 //     'author.name'          => ['required'],
-//     'author.books'         => ['required', 'array', 'min:1', 'max:2',],
+//     'author.books'         => ['required', 'array', 'min:1', 'max:2'],
 //     'author.books.*.title' => ['required'],
 // ]
 ```
 
-- [Manual Creation](#manual-creation)
 - [Facade](#facade)
+- [Manual Creation](#manual-creation)
 - [Fluent API](#fluent-api)
-
-#### Manual Creation
-
-```php
-$validationProvider = new NestedValidationProvider(
-    'author',
-    new AggregateValidationProvider(
-        new AuthorValidationProvider(),
-        new CustomValidationProvider(['books' => ['required', 'array', 'min:1', 'max:2',],]),
-        new ArrayValidationProvider('books', new BookValidationProvider())
-    )
-);
-$validationProvider->rules();
-```
 
 #### Facade
 
@@ -181,11 +183,35 @@ use IndexZer0\LaravelValidationProvider\Facades\ValidationProvider;
 $validationProvider = ValidationProvider::make([
     'author' => [
         AuthorValidationProvider::class,
-        new CustomValidationProvider(['books' => ['required', 'array', 'min:1', 'max:2',],]),
+        new CustomValidationProvider(['books' => ['required', 'array', 'min:1', 'max:2']]),
         new ArrayValidationProvider('books', new BookValidationProvider()),
     ],
 ]);
 $validationProvider->rules();
+// [
+//     'author.name'          => ['required'],
+//     'author.books'         => ['required', 'array', 'min:1', 'max:2'],
+//     'author.books.*.title' => ['required'],
+// ]
+```
+
+#### Manual Creation
+
+```php
+$validationProvider = new NestedValidationProvider(
+    'author',
+    new AggregateValidationProvider(
+        new AuthorValidationProvider(),
+        new CustomValidationProvider(['books' => ['required', 'array', 'min:1', 'max:2']]),
+        new ArrayValidationProvider('books', new BookValidationProvider())
+    )
+);
+$validationProvider->rules();
+// [
+//     'author.name'          => ['required'],
+//     'author.books'         => ['required', 'array', 'min:1', 'max:2'],
+//     'author.books.*.title' => ['required'],
+// ]
 ```
 
 #### Fluent API
@@ -195,10 +221,15 @@ $validationProvider->rules();
 ```php
 $validationProvider = (new BookValidationProvider())
     ->nestedArray('books')
-    ->with(new CustomValidationProvider(['books' => ['required', 'array', 'min:1', 'max:2',],]))
+    ->with(new CustomValidationProvider(['books' => ['required', 'array', 'min:1', 'max:2']]))
     ->with(AuthorValidationProvider::class)
     ->nested('author');
 $validationProvider->rules();
+// [
+//     'author.name'          => ['required'],
+//     'author.books'         => ['required', 'array', 'min:1', 'max:2'],
+//     'author.books.*.title' => ['required'],
+// ]
 ```
 
 ---
@@ -286,6 +317,7 @@ This package provides core classes that give you the ability to compose your val
 - [Array Validation Provider](#array-validation-provider)
 - [Custom Validation Provider](#custom-validation-provider)
 - [Exclude Attributes Validation Provider](#exclude-attributes-validation-provider)
+- [Map Attributes Validation Provider](#map-attributes-validation-provider)
 
 #### Aggregate Validation Provider
 
@@ -341,7 +373,7 @@ $validationProvider->rules();
 ```php
 class CustomValidationProvider extends AbstractValidationProvider {}
 $customRules = [
-    'books' => ['required', 'array', 'min:1', 'max:2',],
+    'books' => ['required', 'array', 'min:1', 'max:2'],
 ];
 $customMessages = [
     'books.required' => 'Provide :attribute'
@@ -352,7 +384,7 @@ $customAttributes = [
 $validationProvider = new CustomValidationProvider($customRules, $customMessages, $customAttributes);
 $validationProvider->rules();
 // [
-//     'books' => ['required', 'array', 'min:1', 'max:2',],
+//     'books' => ['required', 'array', 'min:1', 'max:2'],
 // ]
 ```
 
@@ -365,13 +397,31 @@ class ExcludeAttributesValidationProvider extends AbstractValidationProvider {}
 $validationProvider = new ExcludeAttributesValidationProvider(
     ['one'],
     new CustomValidationProvider([
-        'one' => ['required',],    
-        'two' => ['required',],    
+        'one' => ['required'],
+        'two' => ['required']
     ])
 );
 $validationProvider->rules();
 // [
-//     'two' => ['required',],
+//     'two' => ['required'],
+// ]
+```
+
+#### Map Attributes Validation Provider
+
+- Sometimes you may want to rename an attribute.
+
+```php
+class MapAttributesValidationProvider extends AbstractValidationProvider {}
+$validationProvider = new MapAttributesValidationProvider(
+    ['one' => 'two'],
+    new CustomValidationProvider([
+        'one' => ['required'],
+    ])
+);
+$validationProvider->rules();
+// [
+//     'two' => ['required'],
 // ]
 ```
 
@@ -387,6 +437,7 @@ $validationProvider->rules();
 | `nestedArray(string $nestedKey)`                                      | `ArrayValidationProvider`             |
 | <code>with(string&#124;ValidationProvider $validationProvider)</code> | `AggregateValidationProvider`         |
 | `exclude(array $attributes)`                                          | `ExcludeAttributesValidationProvider` |
+| `map(array $attributes)`                                              | `MapAttributesValidationProvider`     |
 
 #### Using Facade
 
@@ -471,16 +522,6 @@ Let's look at the example of 3 routes and how you could reuse your Validation Pr
 - Route: address
   - Stores address information
   - Uses `AddressValidationProvider`
-- Route: contact-details
-  - Stores contact information
-  - Uses `ContactValidationProvider`
-- Route: profile
-  - Stores address **and** contact information.
-  - Uses
-    - `NestedValidationProvider`
-    - `AggregateValidationProvider`
-    - `AddressValidationProvider`
-    - `ContactValidationProvider`
 
 ```php
 /*
@@ -501,7 +542,9 @@ class StoreAddressRequest extends ValidationProviderFormRequest
     }
 }
 ```
-
+- Route: contact-details
+  - Stores contact information
+  - Uses `ContactValidationProvider`
 ```php
 /*
  * ------------------
@@ -521,6 +564,13 @@ class StoreContactDetailsRequest extends ValidationProviderFormRequest
     }
 }
 ```
+- Route: profile
+  - Stores address **and** contact information.
+  - Uses
+    - `AddressValidationProvider`
+    - `ContactValidationProvider`
+    - `NestedValidationProvider` (under the hood from Facade)
+    - `AggregateValidationProvider` (under the hood from Facade)
 
 ```php
 /*
@@ -537,21 +587,6 @@ class StoreProfileRequest extends ValidationProviderFormRequest
 {
     public function prepareForValidation()
     {
-        $this->validationProvider = new NestedValidationProvider(
-            'profile',
-            new AggregateValidationProvider(
-                new NestedValidationProvider(
-                    'address',
-                    new AddressValidationProvider()
-                ),
-                new NestedValidationProvider(
-                    'contact',
-                    new ContactValidationProvider()
-                ),
-            )
-        );
-        
-        // or using Facade
         $this->validationProvider = ValidationProvider::make([
             'profile' => [
                 'address' => AddressValidationProvider::class
@@ -630,6 +665,7 @@ class NestedValidationProvider extends AbstractValidationProvider {}
 class ArrayValidationProvider extends NestedValidationProvider {}
 class CustomValidationProvider extends AbstractValidationProvider {}
 class ExcludeAttributesValidationProvider extends AbstractValidationProvider {}
+class MapAttributesValidationProvider extends AbstractValidationProvider {}
 
 // Form Request
 class ValidationProviderFormRequest extends \Illuminate\Foundation\Http\FormRequest {}

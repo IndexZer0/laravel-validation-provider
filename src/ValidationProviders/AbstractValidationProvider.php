@@ -6,11 +6,17 @@ namespace IndexZer0\LaravelValidationProvider\ValidationProviders;
 
 use Illuminate\Contracts\Validation\Validator;
 use IndexZer0\LaravelValidationProvider\Contracts\ValidationProvider;
-use IndexZer0\LaravelValidationProvider\ValidationProviderFactory;
+use IndexZer0\LaravelValidationProvider\Helpers\ObjectHelper;
 
 abstract class AbstractValidationProvider implements ValidationProvider
 {
     protected array $nestedKey = [];
+
+    protected array $rules = [];
+
+    protected array $messages = [];
+
+    protected array $attributes = [];
 
     /*
      * --------------------------------
@@ -20,17 +26,17 @@ abstract class AbstractValidationProvider implements ValidationProvider
 
     public function rules(): array
     {
-        return [];
+        return $this->rules;
     }
 
     public function messages(): array
     {
-        return [];
+        return $this->messages;
     }
 
     public function attributes(): array
     {
-        return [];
+        return $this->attributes;
     }
 
     /*
@@ -95,7 +101,7 @@ abstract class AbstractValidationProvider implements ValidationProvider
     public function with(string|ValidationProvider $validationProvider): ValidationProvider
     {
         if (is_string($validationProvider)) {
-            $validationProvider = ValidationProviderFactory::instantiateValidationProvider($validationProvider);
+            $validationProvider = ObjectHelper::instantiateValidationProvider($validationProvider);
         }
 
         return new AggregateValidationProvider($validationProvider, $this);
@@ -104,6 +110,11 @@ abstract class AbstractValidationProvider implements ValidationProvider
     public function exclude(array $attributes): ValidationProvider
     {
         return new ExcludeAttributesValidationProvider($attributes, $this);
+    }
+
+    public function map(array $attributes): ValidationProvider
+    {
+        return new MapAttributesValidationProvider($attributes, $this);
     }
 
     /*

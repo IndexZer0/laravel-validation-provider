@@ -7,9 +7,10 @@ use IndexZer0\LaravelValidationProvider\Tests\ValidationProviders\BookValidation
 use IndexZer0\LaravelValidationProvider\ValidationProviders\AggregateValidationProvider;
 use IndexZer0\LaravelValidationProvider\ValidationProviders\ArrayValidationProvider;
 use IndexZer0\LaravelValidationProvider\ValidationProviders\ExcludeAttributesValidationProvider;
+use IndexZer0\LaravelValidationProvider\ValidationProviders\MapAttributesValidationProvider;
 use IndexZer0\LaravelValidationProvider\ValidationProviders\NestedValidationProvider;
 
-it('can nest', function () {
+it('can nest | nested()', function () {
 
     $validationProvider = (new AuthorValidationProvider())
         ->nested('author');
@@ -23,7 +24,7 @@ it('can nest', function () {
 
 });
 
-it('can array nest', function () {
+it('can array nest | nestedArray()', function () {
 
     $validationProvider = (new AuthorValidationProvider())
         ->nestedArray('authors');
@@ -37,7 +38,7 @@ it('can array nest', function () {
 
 });
 
-it('can aggregate', function () {
+it('can aggregate | with()', function () {
 
     $validationProvider = (new AuthorValidationProvider())
         ->with(BookValidationProvider::class);
@@ -48,13 +49,14 @@ it('can aggregate', function () {
     expect($validationProviders[1])->toBeInstanceOf(AuthorValidationProvider::class);
 
     expect($validationProvider->rules())->toEqual([
-        'title' => ['required',],
-        'name' => ['required',],
+        'title'       => ['required',],
+        'description' => ['required',],
+        'name'        => ['required',],
     ]);
 
 });
 
-it('can exclude', function () {
+it('can exclude | exclude()', function () {
 
     $validationProvider = (new AuthorValidationProvider())
         ->exclude(['name']);
@@ -63,6 +65,20 @@ it('can exclude', function () {
     expect($validationProvider->validationProvider)->toBeInstanceOf(AuthorValidationProvider::class);
 
     expect($validationProvider->rules())->toEqual([]);
+
+});
+
+it('can map | map()', function () {
+
+    $validationProvider = (new AuthorValidationProvider())
+        ->map(['name' => 'author_name']);
+
+    expect($validationProvider)->toBeInstanceOf(MapAttributesValidationProvider::class);
+    expect($validationProvider->validationProvider)->toBeInstanceOf(AuthorValidationProvider::class);
+
+    expect($validationProvider->rules())->toEqual([
+        'author_name' => ['required']
+    ]);
 
 });
 
