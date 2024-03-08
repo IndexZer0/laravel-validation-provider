@@ -8,10 +8,7 @@ use IndexZer0\LaravelValidationProvider\ValidationProviders\AbstractValidationPr
 
 class AuthorValidationProvider extends AbstractValidationProvider
 {
-    public function rules(): array
-    {
-        return [
-            'name' => ['required'],
-        ];
-    }
+    protected array $rules = [
+        'name' => ['required',],
+    ];
 }
