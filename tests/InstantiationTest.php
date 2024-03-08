@@ -31,7 +31,8 @@ it('instantiates object hierarchies consistently', function () {
         new AggregateValidationProvider(
             new AuthorValidationProvider(),
             new CustomValidationProvider($customRules, $customMessages, $customAttributes),
-            new ArrayValidationProvider('books',
+            new ArrayValidationProvider(
+                'books',
                 new MapAttributesValidationProvider(
                     ['title' => 'real_title'],
                     new ExcludeAttributesValidationProvider(
@@ -47,7 +48,8 @@ it('instantiates object hierarchies consistently', function () {
         'author' => [
             AuthorValidationProvider::class,
             new CustomValidationProvider($customRules, $customMessages, $customAttributes),
-            new ArrayValidationProvider('books',
+            new ArrayValidationProvider(
+                'books',
                 new MapAttributesValidationProvider(
                     ['title' => 'real_title'],
                     new ExcludeAttributesValidationProvider(
