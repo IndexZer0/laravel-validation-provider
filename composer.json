@@ -26,7 +26,8 @@
     ],
     "require": {
         "php": "^8.2",
-        "illuminate/contracts": "^11.0"
+        "illuminate/contracts": "^11.0",
+        "illuminate/support": "^11.0"
     },
     "require-dev": {
         "larastan/larastan": "^2.0.1",
