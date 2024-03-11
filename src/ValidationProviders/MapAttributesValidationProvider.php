@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace IndexZer0\LaravelValidationProvider\ValidationProviders;
 
+use Illuminate\Support\Arr;
 use IndexZer0\LaravelValidationProvider\Contracts\ValidationProvider;
-use IndexZer0\LaravelValidationProvider\Helpers\ArrayHelper;
 use IndexZer0\LaravelValidationProvider\Traits\HasValidationProviderChild;
 
 class MapAttributesValidationProvider extends AbstractValidationProvider
@@ -47,7 +47,7 @@ class MapAttributesValidationProvider extends AbstractValidationProvider
 
     private function mapRules(array $array): array
     {
-        return ArrayHelper::mapWithKeys($array, function ($value, $key) {
+        return Arr::mapWithKeys($array, function ($value, $key) {
             if (array_key_exists($key, $this->mapAttributes)) {
                 return [$this->mapAttributes[$key] => $value];
             }
@@ -57,7 +57,7 @@ class MapAttributesValidationProvider extends AbstractValidationProvider
 
     private function mapMessages(): array
     {
-        return ArrayHelper::mapWithKeys($this->validationProvider->messages(), function ($value, $key) {
+        return Arr::mapWithKeys($this->validationProvider->messages(), function ($value, $key) {
             foreach ($this->mapAttributes as $from => $to) {
                 if (str_starts_with($key, $from . '.')) {
                     return [str_replace($from . '.', $to . '.', $key) => $value];
