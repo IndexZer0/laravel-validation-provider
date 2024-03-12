@@ -81,8 +81,10 @@ $validationProvider->rules();
 
 ## Requirements
 
-- PHP Version >= 8.1
-- Laravel Version >= 10
+| laravel-validation-provider | PHP Version | Laravel Version |
+|-----------------------------|-------------|-----------------|
+| 2.x                         | 8.1+        | 10.x            |
+| 3.x                         | 8.2+        | 11.x            |
 
 ---
 

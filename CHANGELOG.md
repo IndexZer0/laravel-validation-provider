@@ -2,6 +2,12 @@
 
 All notable changes to `laravel-validation-provider` will be documented in this file.
 
+## v3.0.0 - 2024-03-12
+### Changed
+- Laravel 11 support.
+  - Minimum PHP 8.2
+- Rely on `\Illuminate\Support\Arr::mapWithKeys` instead of own implementation.
+
 ## v2.1.0 - 2024-03-08
 ### Added
 - Ability to define validation `rules`, `messages` and `attributes` by class properties.
